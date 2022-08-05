@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.DB_Search"
+             Title="{Binding Title}"
+             xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models">
+    
+    <ContentPage.BindingContext>
+        <vm:SearchViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid 
+                              VerticalOptions="FillAndExpand"
+                               RowSpacing="1"
+                               ColumnSpacing="1"
+                              RowDefinitions = "0.3*,0.5*,1*,0.2*" 
+                HeightRequest="200"
+                BackgroundColor="#0376F3">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label  Grid.Row="1" Grid.Column="0" FontAttributes="Bold" TextColor="White" Text="{Binding SelectedPicker, StringFormat='Показаны последние {0} списков'}"  
+                       FontSize="20" HorizontalTextAlignment="Center"  VerticalTextAlignment="Center"/>
+                <Label Padding="10" Grid.Row="2" Grid.Column="0" FontAttributes="Italic" TextColor="White" Text="Нажмите, чтобы изменить"  
+                       FontSize="16" HorizontalTextAlignment="Center" TextDecorations="Underline" VerticalTextAlignment="Center"/>
+                
+                
+                <Picker Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" x:Name="picker" Title="Изменить кол-во последних списков" 
+                    Opacity="0"
+                        ItemsSource="{Binding ListPicker}"
+                    SelectedItem="{Binding SelectedPicker}"
+                        SelectedIndexChanged="picker_SelectedIndexChanged"
+                    TitleColor="#0376F3"  >
+                </Picker>
+                
+            </Grid>
+            
+            <SearchBar x:Name="searchBar"
+                    Placeholder="Search items..."
+                   TextTransform="Lowercase"
+                   HorizontalTextAlignment="End"
+                   FontSize="Medium"
+                   FontAttributes="Italic" 
+                   TextChanged="OnTextChanged"
+                   SearchCommand="{Binding PerformSearchSpisok}"
+                   SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+            
+            <CollectionView x:Name="searchResultsSpisok"
+                ItemsSource="{Binding SearchResultsSpisok}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate >
+                    
+                    <DataTemplate>
+
+
+                        <StackLayout Padding="1" x:DataType="model:Spisok">
+
+                            <Grid HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"
+                               RowSpacing="1"
+                               ColumnSpacing="1"
+                                  
+                               Margin="10"
+                              RowDefinitions = "*" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="1.6*" />
+                                    <ColumnDefinition Width="1.8*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="1" Text="ID:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="2" Text="Имя:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="2" Grid.Column="2" Text="Дата:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="3" Text="Кол-во:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+                                <Label Grid.Row="2" Grid.Column="3" Text="Завершено:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="4" Text="Комментарий:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Id}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding Name}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding Date}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="3" Text="{Binding Count}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="3" Grid.Column="3" Text="{Binding Complete}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="4" Grid.RowSpan="3" Text="{Binding Comment}" LineBreakMode="WordWrap"
+                            
+                            FontSize="16" />
+                            </Grid>
+                            <BoxView Color="Black" WidthRequest ="100" HeightRequest="1"/>
+
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=SpisokTapped}"		
+                                CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>
+
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

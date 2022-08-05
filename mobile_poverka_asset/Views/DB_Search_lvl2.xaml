@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.DB_Search_lvl2"
+             Title="{Binding Title}"
+             xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models">
+
+    <ContentPage.BindingContext>
+        <vm:SearchViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <vm:SearchViewModel x:Key="SearchViewModel"/>
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView 
+                ItemsSource="{Binding CurrentSpisok}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" x:DataType="model:Spisok" BackgroundColor="#8BD2FA" >
+                            <Grid HorizontalOptions="FillAndExpand"
+                               RowSpacing="0"
+                               ColumnSpacing="0"
+                               Margin="0"
+                              RowDefinitions ="0.1*,*,*,*,*,0.9*" 
+                              ColumnDefinitions="1*,2*">
+
+                                <Label Grid.Row="1" Grid.Column="0" Text="ID:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+
+                                <Label Grid.Row="2" Grid.Column="0" Text="Имя:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+
+                                <Label Grid.Row="3" Grid.Column="0" Text="Дата:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+
+                                <Label Grid.Row="4" Grid.Column="0" Text="Кол-во:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+                                <Label Grid.Row="5" Grid.Column="0" Text="Завершено:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+
+                                <Label Grid.Row="6" Grid.Column="0" Text="Комментарий:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                                       VerticalTextAlignment="Center"
+                            FontSize="16" />
+                                <Entry x:Name=""  Grid.Row="1" Grid.Column="1" Keyboard="Numeric" Text="{Binding Id, Mode=TwoWay}" 
+                            FontSize="16" />
+                                <Entry  Grid.Row="2" Grid.Column="1" Keyboard="Chat" Text="{Binding Name, Mode=TwoWay}"
+                            FontSize="16" />
+                                <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Date, Mode=TwoWay}" 
+                            FontSize="16" />
+                                <Entry Grid.Row="4" Grid.Column="1" Keyboard="Numeric"  Text="{Binding Count, Mode=TwoWay}"
+                            FontSize="16" />
+                                <Entry  Grid.Row="5" Grid.Column="1" Keyboard="Default"  Text="{Binding Complete, Mode=TwoWay}"
+                            FontSize="16" />
+                                <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Comment, Mode=TwoWay}"
+                            FontSize="16" />
+                                
+                            </Grid>
+
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid HorizontalOptions="Fill"
+                               RowSpacing="0"
+                               ColumnSpacing="0"
+                               Margin="10"
+                              RowDefinitions = "*" 
+                              ColumnDefinitions="1*,0.3*,1*">
+                <Button IsVisible="{Binding RedVis}"  HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Редактировать" Clicked="ModifyPoolButton_Clicked"  VerticalOptions="Start"/>
+                <Button IsVisible="{Binding DelVis}"  Grid.Row="0" Grid.Column="2" Text="Удалить пулл" Clicked="DeletePoolButton_Clicked" VerticalOptions="Start"/>
+
+                <Button IsVisible="{Binding DropVis}" HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Отмена" Clicked="DropModifyPoolButton_Clicked"  VerticalOptions="Start"/>
+                <Button IsVisible="{Binding SaveVis}" Grid.Row="0" Grid.Column="2" Text="Сохранить" Clicked="SaveModifyPoolButton_Clicked" VerticalOptions="Start"/>
+            </Grid>
+            <SearchBar x:Name="searchBar"
+                    Placeholder="Search items..."
+                   TextTransform="Lowercase"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"
+                   FontAttributes="Italic" 
+                   TextChanged="OnTextChanged"
+                   SearchCommand="{Binding PerformSearchItem}"
+                   SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+              
+            <CollectionView x:Name="searchResultsItem"
+                ItemsSource="{Binding SearchResultsItem}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <StackLayout Padding="1" x:DataType="model:Item">
+
+                            <Grid HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"
+                               RowSpacing="0"
+                               ColumnSpacing="0"
+                               Margin="10"
+                              RowDefinitions = "*" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="2.8*" />
+                                    <ColumnDefinition Width="1.3*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="1" Text="ID:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="2" Text="Серийный номер:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="3" Text="Канал:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="0" Grid.Column="4" Text="ID списка:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Id}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding Serial}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="3" Text="{Binding idchannel}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                                <Label Grid.Row="1" Grid.Column="4" Text="{Binding spisok_id}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" />
+                            </Grid>
+                            <BoxView Color="Black" WidthRequest ="100" HeightRequest="1"/>
+
+
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

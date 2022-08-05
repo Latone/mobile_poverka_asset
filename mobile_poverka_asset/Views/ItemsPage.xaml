@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.ItemsPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:mobile_poverka_asset.ViewModels"  
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models"  
+             x:Name="BrowseItemsPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Добавить" Command="{Binding AddItemCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <local:YesNoMaybeToColorConverter x:Key="YesNoMaybeToColorConverter" />
+    </ContentPage.Resources>
+    <!--
+      x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
+      https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
+    -->
+    <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="ItemsListView"
+                ItemsSource="{Binding Items}"
+                SelectionMode="None"
+                Header="{Binding .}">
+
+            <CollectionView.HeaderTemplate>
+
+                <DataTemplate>
+                    <StackLayout>
+                        <Label  Text="Название пула" FontSize="Medium" Margin="0,0,10,0" HorizontalTextAlignment="Center"/>
+                        <Editor  Text="{Binding pool_name}" AutoSize="TextChanges" FontSize="Medium" Margin="0"/>
+
+                        <Button Text="Создать запись" Clicked="WriteDBButton_Clicked" VerticalOptions="Start"/>
+
+                    </StackLayout>
+
+                </DataTemplate>
+            </CollectionView.HeaderTemplate>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    
+                    <StackLayout Padding="1" x:DataType="model:Item">
+                        <Frame HasShadow="False" Padding="3" CornerRadius="20" BackgroundColor="{Binding inDataBase, Converter={StaticResource YesNoMaybeToColorConverter}}">
+                            <Frame HasShadow="False" CornerRadius="20" BackgroundColor="White" Padding="12">
+                                
+                                <Grid HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"
+                               RowSpacing="0"
+                               ColumnSpacing="0"
+                               Margin="10"
+                              RowDefinitions = "*" 
+                              ColumnDefinitions = "*">
+
+
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Серийный номер:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Serial}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="16" />
+
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Номер канала:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding idchannel}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                </Grid>
+                            </Frame>
+                        </Frame>
+                        
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                            </TapGestureRecognizer>
+                        </StackLayout.GestureRecognizers>
+
+                    </StackLayout>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+           
+
+        </CollectionView>
+        
+    </RefreshView>
+    
+
+</ContentPage>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.ItemDetailPage"
+             Title="{Binding Title}">
+
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Серийный номер:" FontSize="Medium" />
+        <Editor Text="{Binding Serial}" FontSize="Small" Keyboard="Numeric"/>
+        <Label Text="ID канала:" FontSize="Medium" />
+        <Editor Text="{Binding IDchannel}" FontSize="Small" Keyboard="Numeric"/>
+        <Button Text="Сохранить изменения" Clicked="ChangeContentButton_Clicked" HorizontalOptions="FillAndExpand"></Button>
+    </StackLayout>
+    
+</ContentPage>
