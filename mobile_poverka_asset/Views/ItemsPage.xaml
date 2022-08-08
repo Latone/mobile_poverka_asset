@@ -1,11 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mobile_poverka_asset.Views.ItemsPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:mobile_poverka_asset.ViewModels"  
              xmlns:model="clr-namespace:mobile_poverka_asset.Models"  
-             x:Name="BrowseItemsPage">
+             x:Name="BrowseItemsPage"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             Shell.PresentationMode="ModalAnimated">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Добавить" Command="{Binding AddItemCommand}" />
@@ -18,6 +21,8 @@
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
+    <ContentPage.Content>
+        <StackLayout>
     <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
@@ -28,8 +33,9 @@
 
                 <DataTemplate>
                     <StackLayout>
-                        <Label  Text="Название пула" FontSize="Medium" Margin="0,0,10,0" HorizontalTextAlignment="Center"/>
-                        <Editor  Text="{Binding pool_name}" AutoSize="TextChanges" FontSize="Medium" Margin="0"/>
+                                <Label TextColor="#093653" Text="Название пула" FontAttributes="Bold,Italic" FontSize="20" Margin="0,0,10,0" HorizontalTextAlignment="Center"/>
+                        <Label IsVisible="{Binding pool_error}" TextColor="#BC0000" TextDecorations="Underline" FontAttributes="Bold,Italic" Text="Поле названия не должно быть пустым" FontSize="Medium" Margin="0,0,10,0" HorizontalTextAlignment="Center"/>
+                                <Entry  x:Name="pool_entry" Text="{Binding pool_name, Mode=TwoWay}"  FontSize="Medium" Margin="0" />
 
                         <Button Text="Создать запись" Clicked="WriteDBButton_Clicked" VerticalOptions="Start"/>
 
@@ -95,6 +101,7 @@
         </CollectionView>
         
     </RefreshView>
-    
+        </StackLayout>
+    </ContentPage.Content>
 
 </ContentPage>

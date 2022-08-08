@@ -72,7 +72,8 @@ namespace mobile_poverka_asset.ViewModels
 
         private async void OnAddItem(object obj)
         {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
+           await Shell.Current.GoToAsync(nameof(NewItemPage));
+            //await App.Current.MainPage.Navigation.PushAsync(new NewItemPage());
         }
 
         async void OnItemSelected(Item item)
@@ -99,6 +100,20 @@ namespace mobile_poverka_asset.ViewModels
             {
                 Vpool_name = value;
                 OnPropertyChanged(nameof(pool_name));
+            }
+        }
+        private bool Vpool_error;
+
+        public bool pool_error
+        {
+            get
+            {
+                return Vpool_error;
+            }
+            set
+            {
+                Vpool_error = value;
+                OnPropertyChanged(nameof(pool_error));
             }
         }
     }

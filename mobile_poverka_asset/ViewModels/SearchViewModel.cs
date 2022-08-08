@@ -16,11 +16,13 @@ namespace mobile_poverka_asset.ViewModels
     {
         private List<string> listPicker;
         public Command<Spisok> SpisokTapped { get; }
+        //public Command<Item> ItemTapped { get; }
         public ICommand ModifyButton { get; set; }
         public ICommand DropModifyButton { get; set; }
         public ICommand SaveModifyButton { get; set; }
 
         public string spisok_id;
+        //public string item_id;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SearchViewModel(){
@@ -37,7 +39,9 @@ namespace mobile_poverka_asset.ViewModels
             SelectedPicker = listPicker[0];
 
             SpisokTapped = new Command<Spisok>(OnSpisokSelected);
+            //ItemTapped = new Command<Item>(OnItemSelected);
         }
+        
         async void OnSpisokSelected(Spisok spisok)
         {
             if (spisok == null)
@@ -53,16 +57,14 @@ namespace mobile_poverka_asset.ViewModels
 
             await Shell.Current.GoToAsync($"{nameof(DB_Search_lvl2)}");
         }
+        
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public ICommand PerformSearchItem => new Command<string>((string query) =>
-        {
-            SearchResultsItem = SearchDevice.GetSearchResultsPribor(query,spisok_id);
-        });
+        
 
         public ICommand PerformSearchSpisok => new Command<string>((string query) =>
         {
@@ -104,19 +106,7 @@ namespace mobile_poverka_asset.ViewModels
         }
 
         
-        private List<Item> searchResultsItem;
-        public List<Item> SearchResultsItem
-        {
-            get
-            {
-                return searchResultsItem;
-            }
-            set
-            {
-                searchResultsItem = value;
-                NotifyPropertyChanged();
-            }
-        }
+       
         private List<Spisok> searchResultsSpisok;
         public List<Spisok> SearchResultsSpisok
         {

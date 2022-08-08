@@ -16,9 +16,9 @@ namespace mobile_poverka_asset
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
+            DependencyService.Register<IMessage, MessageAndroid>();
             MainPage = new AppShell();
         }
-
         protected override void OnStart()
         {
         }

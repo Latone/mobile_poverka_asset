@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using mobile_poverka_asset.Services;
 
 namespace mobile_poverka_asset.Views
 {
@@ -26,8 +27,21 @@ namespace mobile_poverka_asset.Views
         {
             base.OnAppearing();
             //_viewModel.OnAppearing();
-            //if()
+
             searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok("", picker.SelectedItem.ToString());
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                var displayAlert = await this.DisplayAlert("Закрыть приложение?", "Вы собираетесь полностью закрыть приложение, вы точно уверены?", "Да", "Нет");
+                if (displayAlert)
+                {
+                    DependencyService.Get<IAndroidMethods>().CloseApp();
+                }
+
+            });
+            return true;
         }
         void picker_SelectedIndexChanged(object sender, EventArgs e)
         {

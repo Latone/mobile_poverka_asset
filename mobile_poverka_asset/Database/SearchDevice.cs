@@ -12,7 +12,9 @@ namespace mobile_poverka_asset.Database
     class SearchDevice
     {
         public static string spisok_id;
+        public static string item_id;
         public static List<Spisok> currentSpisok;
+        public static List<Item> currentItem;
         public static List<Spisok> GetSearchResultsSpisok(string query_pretext,string numOfRows)
         {
             if (Connection.getConn() == null) return new List<Spisok>();

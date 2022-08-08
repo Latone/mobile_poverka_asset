@@ -18,12 +18,14 @@ namespace mobile_poverka_asset.Database
         }
         public static event PropertyChangedEventHandler StaticPropertyChanged; //Можно подписываться на него
 
-        public static void changeConnectionStatusTo(string val)
+        public static void changeConnectionStatusTo(string val, bool buttonf)
         {
             connText = val;
+            button = buttonf;
             NotifyStaticPropertyChanged("ConnectionUpdate");
         }
         static string connText = "Нет соединения";
+        static bool button = true;
         static NpgsqlConnection conn;
         public static NpgsqlConnection getConn() {
             return conn;
@@ -32,17 +34,21 @@ namespace mobile_poverka_asset.Database
         {
             return connText;
         }
-            public static void Connect()
+        static public bool getStatusButton()
         {
-            changeConnectionStatusTo("Устанавливаем соединение..");//--Триггер на изменение поля
+            return button;
+        }
+        public static void Connect()
+        {
+            changeConnectionStatusTo("Устанавливаем соединение..",false);//--Триггер на изменение поля
             
             conn = new NpgsqlConnection(@"Server=192.168.43.4;Port=5432;User Id=postgres;Password=vjytnf1234;Database=postgres");
             
             conn.Open();
                 if (conn != null && conn.State == ConnectionState.Open)
-                    changeConnectionStatusTo("Соединение установлено"); //--Триггер на изменение поля
+                    changeConnectionStatusTo("Соединение установлено",false); //--Триггер на изменение поля
                 else {
-                    changeConnectionStatusTo("Ошибка соединения"); //--Триггер на изменение поля
+                    changeConnectionStatusTo("Ошибка соединения",true); //--Триггер на изменение поля
                 }
                 
                 //NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO pribor (serial, idchannel) values (100,434)", conn);

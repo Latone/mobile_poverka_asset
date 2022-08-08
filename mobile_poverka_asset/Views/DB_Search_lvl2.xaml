@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mobile_poverka_asset.Views.DB_Search_lvl2"
              Title="{Binding Title}"
+             x:Name="tpage"
              xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
              xmlns:model="clr-namespace:mobile_poverka_asset.Models">
 
     <ContentPage.BindingContext>
-        <vm:SearchViewModel/>
+        <vm:DB_Search_lvl2ViewModel/>
+        
     </ContentPage.BindingContext>
     
     <ContentPage.Resources>
-        <vm:SearchViewModel x:Key="SearchViewModel"/>
+        <vm:DB_Search_lvl2ViewModel x:Key="DB_Search_lvl2ViewModel"/>
     </ContentPage.Resources>
     
     <ContentPage.Content>
@@ -106,12 +108,12 @@
               
             <CollectionView x:Name="searchResultsItem"
                 ItemsSource="{Binding SearchResultsItem}"
-                SelectionMode="None">
+                >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
                         <StackLayout Padding="1" x:DataType="model:Item">
-
+                            
                             <Grid HorizontalOptions="FillAndExpand"
                               VerticalOptions="FillAndExpand"
                                RowSpacing="0"
@@ -161,7 +163,14 @@
                             </Grid>
                             <BoxView Color="Black" WidthRequest ="100" HeightRequest="1"/>
 
-
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={x:Reference tpage}, Path=ItemTappedlvl2}"	
+                                CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>
+                            
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -14,6 +14,7 @@ namespace mobile_poverka_asset
             Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
             Routing.RegisterRoute(nameof(DB_Search_lvl2), typeof(DB_Search_lvl2));
+
         }
 
     }
