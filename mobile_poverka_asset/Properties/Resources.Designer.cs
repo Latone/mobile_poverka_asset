@@ -59,5 +59,59 @@ namespace mobile_poverka_asset.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на postgres.
+        /// </summary>
+        internal static string database {
+            get {
+                return ResourceManager.GetString("database", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        internal static string ListOfDBProfiles {
+            get {
+                return ResourceManager.GetString("ListOfDBProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на vjytnf1234.
+        /// </summary>
+        internal static string password {
+            get {
+                return ResourceManager.GetString("password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 5432.
+        /// </summary>
+        internal static string port {
+            get {
+                return ResourceManager.GetString("port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 192.168.43.159.
+        /// </summary>
+        internal static string server {
+            get {
+                return ResourceManager.GetString("server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на postgres.
+        /// </summary>
+        internal static string userid {
+            get {
+                return ResourceManager.GetString("userid", resourceCulture);
+            }
+        }
     }
 }
