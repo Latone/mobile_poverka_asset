@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Data.SqlClient;
-
+using Xamarin.Essentials;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using mobile_poverka_asset.ViewModels;
 using System.Data.Sql;
+using System.Text.Json;
 
 namespace mobile_poverka_asset.Database
 {
@@ -31,6 +32,7 @@ namespace mobile_poverka_asset.Database
         static string connText = "Нет соединения";
         static bool button = true;
         static NpgsqlConnection conn;
+        public static string ListOfDBProfiles = "ListOfDBProfiles";
         public static NpgsqlConnection getConn() {
             return conn;
         }
@@ -43,11 +45,25 @@ namespace mobile_poverka_asset.Database
             return button;
         }
         private static string getSettings() {
-            return @"Server=" + Properties.Resources.server + ";" +
-                                "Port=" + Properties.Resources.port + ";" +
-                                "User Id=" + Properties.Resources.userid + ";" +
-                                "Password=" + Properties.Resources.password + ";" +
-                                "Database=" + Properties.Resources.database;
+           
+
+            var json = Preferences.Get(ListOfDBProfiles, "none");
+            var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
+            
+            var pref = Preferences.Get("LastConnDB", 0);
+
+            return @"Server=" + list[pref].Server + ";" +
+                                "Port=" + list[pref].Port + ";" +
+                                "User Id=" + list[pref].UserId + ";" +
+                                "Password=" + list[pref].Password + ";" +
+                                "Database=" + list[pref].Database;
+        }
+        public static void SaveCurrentProfile(List<Models.ConnectionProfile> Updatedlist, int index)
+        {
+            var json = JsonSerializer.Serialize(Updatedlist);
+            Preferences.Set(ListOfDBProfiles, json);
+
+            Preferences.Set("LastConnDB", index);
         }
         public static void Connect()
         {

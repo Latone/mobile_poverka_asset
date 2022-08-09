@@ -72,6 +72,15 @@ namespace mobile_poverka_asset.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
+        internal static string LastConnDB {
+            get {
+                return ResourceManager.GetString("LastConnDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
         internal static string ListOfDBProfiles {
             get {
                 return ResourceManager.GetString("ListOfDBProfiles", resourceCulture);
