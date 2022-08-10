@@ -12,19 +12,68 @@ using System.Threading.Tasks;
 
 namespace mobile_poverka_asset.ViewModels
 {
-    public class DB_Search_lvl2ViewModel : INotifyPropertyChanged
+    public class DB_Search_lvl2ViewModel : BaseViewModel
     {
         public string item_id;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public Command<Item> ItemTappedlvl2 { get; }
+        public Command<Item> ItemTapped { get; }
+        public Command DeletePool { get; }
+        public DB_Search_lvl2ViewModel()
+        {
+            ItemTapped = new Command<Item>(OnItemSelected);
+            DeletePool = new Command(DeletePoolButton_Clicked);
+            SearchResultsItem = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
+        }
         public ICommand PerformSearchItem => new Command<string>((string query) =>
         {
             SearchResultsItem = SearchDevice.GetSearchResultsPribor(query, SearchDevice.spisok_id);
         });
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        async void DeletePoolButton_Clicked()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                bool answer = await App.Current.MainPage.DisplayAlert($"Вы точно хотите удалить \n\"{CurrentSpisok[0].Name}\"?",
+                $"ID: [{CurrentSpisok[0].Id}]", "Удалить", "Отмена");
+                if (answer == true)
+                {
+                    await ModifyDelete.deletePool();
+                    await App.Current.MainPage.Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+
+            }
+
+        }
+        private string selectedItem;
+        public string SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+
+                selectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
+        }
+        private List<Spisok> currentSpisok;
+        public List<Spisok> CurrentSpisok
+        {
+            get
+            {
+                return SearchDevice.currentSpisok;
+            }
+            set
+            {
+                this.currentSpisok = value;
+                OnPropertyChanged(nameof(CurrentSpisok));
+            }
         }
         private List<Item> searchResultsItem;
         public List<Item> SearchResultsItem
@@ -36,11 +85,19 @@ namespace mobile_poverka_asset.ViewModels
             set
             {
                 searchResultsItem = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged(nameof(SearchResultsItem));
             }
         }
-        public DB_Search_lvl2ViewModel() {
-            ItemTappedlvl2 = new Command<Item>(OnItemSelected);
+        
+        public void OnTextChanged(object sender, EventArgs e)
+        {
+            SearchBar searchBar = (SearchBar)sender;
+            SearchResultsItem = SearchDevice.GetSearchResultsPribor(searchBar.Text, SearchDevice.spisok_id);
+        }
+        public void OnAppearing()
+        {
+            IsBusy = true;
+            SelectedItem = null;
         }
         /*async void OnItemSelected(Item item)
         {

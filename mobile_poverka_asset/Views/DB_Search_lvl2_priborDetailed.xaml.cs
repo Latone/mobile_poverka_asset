@@ -14,12 +14,7 @@ namespace mobile_poverka_asset.Views
         public DB_Search_lvl2_priborDetailed()
         {
             InitializeComponent();
-            BindingContext = new DB_Search_lvl2_priborDetailedViewModel();
-        }
-        async void ChangeContentButton_Clicked(object sender, EventArgs e)
-        {
-            
-            await Navigation.PopAsync();
+            //BindingContext = new DB_Search_lvl2_priborDetailedViewModel();
         }
     }
 }

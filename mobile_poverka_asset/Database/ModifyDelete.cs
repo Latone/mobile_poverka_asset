@@ -1,14 +1,97 @@
-﻿using Npgsql;
+﻿using mobile_poverka_asset.Models;
+using mobile_poverka_asset.Services;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace mobile_poverka_asset.Database
 {
     class ModifyDelete
     {
-        public async static Task<bool> ModifyPool()
+        public async static Task<bool> DeletePribor() {
+
+            string spisok_id = "";
+            if (SearchDevice.spisok_id != null)
+                spisok_id = SearchDevice.spisok_id;
+
+
+            string pribor_id = "";
+            if (SearchDevice.item_id != null)
+                pribor_id = SearchDevice.item_id;
+            else
+                return false;
+
+            int newPriborCount = Int32.Parse(SearchDevice.currentSpisok[0].Count) - 1;
+            string pr_query = "DELETE FROM pribor WHERE id = \'" + pribor_id + "\'";
+            string sp_query = "UPDATE spisok SET " +
+                                    "count = \'" + newPriborCount + "\' " +
+                                    "WHERE id =" + spisok_id+ ";";
+            NpgsqlCommand cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+
+            //Remove pribor from table
+            int numAffected = cmd.ExecuteNonQuery();
+            if (numAffected == -1)
+            {
+                Console.WriteLine("Data not affected");
+            }
+            else
+            {
+                //await BaseViewModel.DataStore.DeleteItemAsync(serial.ToString(),channel.ToString());
+                Console.WriteLine("Number of rows affected: " + numAffected);
+                DependencyService.Get<IMessage>().ShortAlert("Прибор \'" + pribor_id + "\' удалён из списка \'" +spisok_id+"\'");
+            }
+
+            //Update count in spisok
+            cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+
+            numAffected = cmd.ExecuteNonQuery();
+            if (numAffected == -1)
+            {
+                Console.WriteLine("Data not affected");
+            }
+            else
+            {
+                //await BaseViewModel.DataStore.DeleteItemAsync(serial.ToString(),channel.ToString());
+                SearchDevice.currentSpisok[0].Count = newPriborCount.ToString();
+                Console.WriteLine("Number of rows affected: " + numAffected);
+            }
+            return await Task.FromResult(true);
+        }
+        public async static Task<bool> ModifyPribor()
+        {
+            string pribor_id = "";
+            if (SearchDevice.item_id != null)
+                pribor_id = SearchDevice.item_id;
+            else
+                return false;
+            if (Connection.getConn() == null) return false;
+
+            string pr_query = "UPDATE pribor SET " +
+                                     "serial = \'" + SearchDevice.currentItem[0].Serial + "\'," +
+                                     "idchannel = \'" + SearchDevice.currentItem[0].idchannel + "\'," +
+                                     "spisok_id = \'" + SearchDevice.currentItem[0].spisok_id + "\' " +
+                                     "WHERE id =" + pribor_id + ";";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+
+            int numAffected = cmd.ExecuteNonQuery();
+            if (numAffected == -1)
+            {
+                Console.WriteLine("Data not affected");
+            }
+            else
+            {
+                //await BaseViewModel.DataStore.DeleteItemAsync(serial.ToString(),channel.ToString());
+                Console.WriteLine("Number of rows affected: " + numAffected);
+                DependencyService.Get<IMessage>().ShortAlert("Изменения для прибора \'"+pribor_id+"\' сохранены");
+            }
+
+            return await Task.FromResult(true);
+        }
+            public async static Task<bool> ModifyPool()
         {
 
             string spisok_id = "";

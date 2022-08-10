@@ -33,7 +33,7 @@
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0"  Grid.Row="0" Grid.Column="0" Keyboard="Numeric"  Text="{Binding Server, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0"  Grid.Row="0" Grid.Column="0" Keyboard="Default"  Text="{Binding Server, Mode=TwoWay}" FontSize="16" />
 
                             <Label Grid.Row="0" Grid.Column="2" Text="Порт:"
                             FontAttributes="Bold" 
@@ -46,27 +46,27 @@
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="0" Keyboard="Numeric"  Text="{Binding UserId, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="0" Keyboard="Default"  Text="{Binding UserId, Mode=TwoWay}" FontSize="16" />
                             <Label Grid.Row="1" Grid.Column="2" Text="Пароль:" 
                             FontAttributes="Bold" 
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="2" Keyboard="Numeric"  Text="{Binding Password, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="2" Keyboard="Default"  Text="{Binding Password, Mode=TwoWay}" FontSize="16" />
 
                             <Label Grid.Row="2" Grid.Column="0" Text="База данных:" 
                             FontAttributes="Bold" 
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0" Grid.Row="2" Grid.Column="0" Keyboard="Numeric" Text="{Binding Database, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0" Grid.Row="2" Grid.Column="0" Keyboard="Default" Text="{Binding Database, Mode=TwoWay}" FontSize="16" />
 
                             <Label Grid.Row="2" Grid.Column="2" Text="Имя профиля:" 
                             FontAttributes="Bold" 
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0" Grid.Row="2" Grid.Column="2" Keyboard="Numeric"  Text="{Binding ProfileName, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0" Grid.Row="2" Grid.Column="2" Keyboard="Default"  Text="{Binding ProfileName, Mode=TwoWay}" FontSize="16" />
                             
                             
                         </Grid>
@@ -92,7 +92,6 @@
                     Opacity="0"
                         ItemsSource="{Binding ListPicker}"
                     SelectedItem="{Binding SelectedPicker}"
-                        SelectedIndexChanged="picker_SelectedIndexChanged"
                     TitleColor="#0376F3"  >
             </Picker>
             </Grid>

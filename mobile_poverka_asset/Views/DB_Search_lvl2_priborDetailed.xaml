@@ -1,19 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="mobile_poverka_asset.Views.DB_Search_lvl2_priborDetailed">
+             x:Class="mobile_poverka_asset.Views.DB_Search_lvl2_priborDetailed"
+             xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models">
+
+    <ContentPage.BindingContext>
+        <vm:DB_Search_lvl2_priborDetailedViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
-        <StackLayout Spacing="20" Padding="15">
-            <Label Text="ID:" FontSize="Medium" />
-            <Editor Text="{Binding Serial}" FontSize="Small" Keyboard="Numeric"/>
-            <Label Text="Серийный номер:" FontSize="Medium" />
-            <Editor Text="{Binding Serial}" FontSize="Small" Keyboard="Numeric"/>
-            <Label Text="Номер канала:" FontSize="Medium" />
-            <Editor Text="{Binding IDchannel}" FontSize="Small" Keyboard="Numeric"/>
-            <Label Text="Номер списка:" FontSize="Medium" />
-            <Editor Text="{Binding IDspisok}" FontSize="Small" Keyboard="Numeric"/>
-            
-            <Button Text="Сохранить изменения" Clicked="ChangeContentButton_Clicked" HorizontalOptions="FillAndExpand"></Button>
+        <StackLayout Margin="10" >
+            <CollectionView x:Name="resultItem"
+                ItemsSource="{Binding ResultItem}"
+                SelectionMode="None"
+                            HeightRequest="370">
+                <CollectionView.ItemTemplate >
+
+                    <DataTemplate>
+                        <Grid HeightRequest="370"
+                            HorizontalOptions="FillAndExpand"
+                           RowSpacing="0"
+                           ColumnSpacing="0"
+                           Margin="1"
+                            RowDefinitions = "*,0.02*,*,*,*,*" 
+                        ColumnDefinitions = "*,0.3*,1.2*"
+                              x:DataType="model:Item">
+
+                            <Label Grid.Row="0" Grid.Column="0"  Text="ID:" FontSize="20" />
+                            <Label Margin="25,0,0,0"  Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontSize="20"/>
+
+                            <Label Margin="0,15,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="Серийный номер:" FontSize="20" />
+                            <Entry Margin="0,25,0,0" Grid.Row="2" Grid.Column="0" Text="{Binding Serial}" FontSize="20" Keyboard="Numeric"/>
+
+                            <Label Margin="0,15,0,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер канала:" FontSize="20" />
+                            <Entry Margin="0,25,0,0" Grid.Row="3" Grid.Column="0" Text="{Binding idchannel}" FontSize="20" Keyboard="Numeric"/>
+
+                            <Label Margin="0,15,0,0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер списка:" FontSize="20" />
+                            <Entry Margin="0,25,0,0" Grid.Row="4" Grid.Column="0" Text="{Binding spisok_id}" FontSize="20" Keyboard="Numeric"/>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="Сохранить изменения" Command="{Binding ChangeContent}" HorizontalOptions="FillAndExpand"></Button>
+            <Button Text="Удалить прибор" Command="{Binding DeleteContent}" HorizontalOptions="FillAndExpand"></Button>
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

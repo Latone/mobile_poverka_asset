@@ -73,7 +73,10 @@ namespace mobile_poverka_asset.Views
                     return;
                 }
                 await InsertDevice.Query(_viewModel.pool_name);
-                DependencyService.Get<IMessage>().LongAlert("Добавлено "+_viewModel.Items.Count+ " приборов\nв новый список \""+ _viewModel.pool_name+"\"");
+                if(Connection.getConn() == null)
+                    DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
+                else
+                    DependencyService.Get<IMessage>().LongAlert("Добавлено "+_viewModel.Items.Count+ " приборов\nв новый список \""+ _viewModel.pool_name+"\"");
                 
                 _viewModel.pool_name = "";
                 _viewModel.Items.Clear();

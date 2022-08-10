@@ -12,6 +12,8 @@ using System.Runtime.CompilerServices;
 using mobile_poverka_asset.ViewModels;
 using System.Data.Sql;
 using System.Text.Json;
+using Xamarin.Forms;
+using mobile_poverka_asset.Services;
 
 namespace mobile_poverka_asset.Database
 {
@@ -28,12 +30,23 @@ namespace mobile_poverka_asset.Database
             connText = val;
             button = buttonf;
             NotifyStaticPropertyChanged("ConnectionUpdate");
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var json = Preferences.Get(ListOfDBProfiles, "none");
+                var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
+                var pref = Preferences.Get("LastConnDB", 0);
+
+                string alertstring = Connection.getStatus().Contains("установ") ?
+                                        Connection.getStatus() + " с базой данных \'"+list[pref].Database+"\'" : Connection.getStatus();
+                DependencyService.Get<IMessage>().ShortAlert(alertstring);
+            });
         }
         static string connText = "Нет соединения";
         static bool button = true;
         static NpgsqlConnection conn;
         public static string ListOfDBProfiles = "ListOfDBProfiles";
-        public static NpgsqlConnection getConn() {
+        public static NpgsqlConnection getConn()
+        {
             return conn;
         }
         static public string getStatus()
@@ -44,12 +57,13 @@ namespace mobile_poverka_asset.Database
         {
             return button;
         }
-        private static string getSettings() {
-           
+        private static string getSettings()
+        {
+
 
             var json = Preferences.Get(ListOfDBProfiles, "none");
             var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
-            
+
             var pref = Preferences.Get("LastConnDB", 0);
 
             return @"Server=" + list[pref].Server + ";" +
@@ -67,53 +81,56 @@ namespace mobile_poverka_asset.Database
         }
         public static void Connect()
         {
-            changeConnectionStatusTo("Устанавливаем соединение..",false);//--Триггер на изменение поля
+            changeConnectionStatusTo("Устанавливаем соединение..", false);//--Триггер на изменение поля
 
-            conn = new NpgsqlConnection(getSettings());//@"Server=192.168.43.4;Port=5432;User Id=postgres;Password=vjytnf1234;Database=postgres");
-            try { 
-
-            conn.Open();
+           //@"Server=192.168.43.4;Port=5432;User Id=postgres;Password=vjytnf1234;Database=postgres");
+            try
+            {
+                conn = new NpgsqlConnection(getSettings());
+                conn.Open();
                 if (conn != null && conn.State == ConnectionState.Open)
-                    changeConnectionStatusTo("Соединение установлено",false); //--Триггер на изменение поля
-                else {
-                    changeConnectionStatusTo("Ошибка соединения",true); //--Триггер на изменение поля
+                    changeConnectionStatusTo("Соединение установлено", false); //--Триггер на изменение поля
+                else
+                {
+                    changeConnectionStatusTo("Ошибка соединения", true); //--Триггер на изменение поля
                 }
-        }
-            catch (Exception ex){
+            }
+            catch (Exception ex)
+            {
                 //smth
-                Console.WriteLine("Error Content Page -<-"+ ex.Message);
-            
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+                changeConnectionStatusTo("Ошибка соединения", true);
             }
 
-    //NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO pribor (serial, idchannel) values (100,434)", conn);
+            //NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO pribor (serial, idchannel) values (100,434)", conn);
 
 
 
 
 
-    /*int numAffected = cmd.ExecuteNonQuery();
-    if (numAffected == 0) {
-        Console.WriteLine("Data not affected");
-    }
-    else
-        Console.WriteLine("Number of rows affected: "+numAffected);*/
+            /*int numAffected = cmd.ExecuteNonQuery();
+            if (numAffected == 0) {
+                Console.WriteLine("Data not affected");
+            }
+            else
+                Console.WriteLine("Number of rows affected: "+numAffected);*/
 
 
 
 
-    /*NpgsqlDataReader reader = cmd.ExecuteReader();
-    if (reader.Read())
-    {
-        boolfound = true;
-        string val = reader.ToString();
-        Console.WriteLine("connection established" + "\n"+ val);
-    }
-    if (boolfound == false)
-    {
-        Console.WriteLine("Data does not exist");
-    }
-    reader.Close();*/
+            /*NpgsqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                boolfound = true;
+                string val = reader.ToString();
+                Console.WriteLine("connection established" + "\n"+ val);
+            }
+            if (boolfound == false)
+            {
+                Console.WriteLine("Data does not exist");
+            }
+            reader.Close();*/
 
-}
+        }
     }
 }

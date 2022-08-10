@@ -9,16 +9,12 @@
 
     <ContentPage.BindingContext>
         <vm:DB_Search_lvl2ViewModel/>
-        
     </ContentPage.BindingContext>
     
-    <ContentPage.Resources>
-        <vm:DB_Search_lvl2ViewModel x:Key="DB_Search_lvl2ViewModel"/>
-    </ContentPage.Resources>
     
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView 
+            <CollectionView x:Name="currentSpisok"
                 ItemsSource="{Binding CurrentSpisok}"
                 SelectionMode="None">
                 <CollectionView.ItemTemplate>
@@ -91,12 +87,13 @@
                               RowDefinitions = "*" 
                               ColumnDefinitions="1*,0.3*,1*">
                 <Button IsVisible="{Binding RedVis}"  HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Редактировать" Clicked="ModifyPoolButton_Clicked"  VerticalOptions="Start"/>
-                <Button IsVisible="{Binding DelVis}"  Grid.Row="0" Grid.Column="2" Text="Удалить пулл" Clicked="DeletePoolButton_Clicked" VerticalOptions="Start"/>
+                <Button IsVisible="{Binding DelVis}"  Grid.Row="0" Grid.Column="2" Text="Удалить пулл" Command="{Binding DeletePool}" VerticalOptions="Start"/>
 
                 <Button IsVisible="{Binding DropVis}" HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Отмена" Clicked="DropModifyPoolButton_Clicked"  VerticalOptions="Start"/>
                 <Button IsVisible="{Binding SaveVis}" Grid.Row="0" Grid.Column="2" Text="Сохранить" Clicked="SaveModifyPoolButton_Clicked" VerticalOptions="Start"/>
             </Grid>
             <SearchBar x:Name="searchBar"
+                       x:DataType="vm:DB_Search_lvl2ViewModel"
                     Placeholder="Search items..."
                    TextTransform="Lowercase"
                    HorizontalTextAlignment="Center"
@@ -108,7 +105,8 @@
               
             <CollectionView x:Name="searchResultsItem"
                 ItemsSource="{Binding SearchResultsItem}"
-                >
+                SelectionMode="None">
+                
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
@@ -162,15 +160,13 @@
                             FontSize="16" />
                             </Grid>
                             <BoxView Color="Black" WidthRequest ="100" HeightRequest="1"/>
-
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
-                                Command="{Binding Source={x:Reference tpage}, Path=ItemTappedlvl2}"	
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DB_Search_lvl2ViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
                                 </TapGestureRecognizer>
                             </StackLayout.GestureRecognizers>
-                            
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

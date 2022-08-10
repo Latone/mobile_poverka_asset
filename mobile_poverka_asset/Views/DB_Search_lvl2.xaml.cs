@@ -1,5 +1,6 @@
 ﻿using mobile_poverka_asset.Database;
 using mobile_poverka_asset.Models;
+using mobile_poverka_asset.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,36 +20,18 @@ namespace mobile_poverka_asset.Views
         {
             InitializeComponent();
             Title = "Поиск по серийному номеру (Pribor)";
-            searchResultsItem.ItemsSource = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
-            CurrentSpisok = SearchDevice.currentSpisok;
+            //CurrentSpisok = SearchDevice.currentSpisok;
 
             RedVis = true;
             DelVis = true;
             DropVis = false;
             SaveVis = false;
 
-            BindingContext = this;
-        }
-        async void DeletePoolButton_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                bool answer = await App.Current.MainPage.DisplayAlert($"Вы точно хотите удалить \n\"{CurrentSpisok[0].Name}\"?",
-                $"ID: [{CurrentSpisok[0].Id}]", "Удалить", "Отмена");
-                if (answer == true)
-                {
-                    await ModifyDelete.deletePool();
-                    await App.Current.MainPage.Navigation.PopAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                //smth
-                Console.WriteLine("Error Content Page -<-" + ex.Message);
+            //searchResultsItem.ItemsSource = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
 
-            }
-
+            //BindingContext = _viewModel = new DB_Search_lvl2ViewModel();
         }
+        
         void ModifyPoolButton_Clicked(object sender, EventArgs e)
         {
             try
@@ -83,18 +66,14 @@ namespace mobile_poverka_asset.Views
             DropVis = false;
             SaveVis = false;
         }
-        private List<Spisok> currentSpisok;
-        public List<Spisok> CurrentSpisok
+
+        protected override void OnAppearing()
         {
-            get
-            {
-                return SearchDevice.currentSpisok;
-            }
-            set
-            {
-                this.currentSpisok = value;
-                OnPropertyChanged(nameof(CurrentSpisok));
-            }
+            base.OnAppearing();
+            searchResultsItem.ItemsSource = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
+            currentSpisok.ItemsSource = null;
+            currentSpisok.ItemsSource =  SearchDevice.currentSpisok;
+            
         }
         private bool readOnly;
         public bool ReadOnly

@@ -1,41 +1,41 @@
-﻿using System;
+﻿using mobile_poverka_asset.Database;
+using mobile_poverka_asset.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 
 namespace mobile_poverka_asset.ViewModels
 {
     public class DB_Search_lvl2_priborDetailedViewModel : BaseViewModel
     {
-        private string itemId;
-
-        private string serial;
-        private string idchannel;
-        private string idspisok;
-        public string Id { get; set; }
-
-
-        public string Serial
-        {
-            get => serial;
-            set => SetProperty(ref serial, value);
+        private List<Item> resultItem;
+        public Command ChangeContent { get; }
+        public Command DeleteContent { get; }
+        public DB_Search_lvl2_priborDetailedViewModel() {
+            ResultItem = SearchDevice.currentItem;
+            ChangeContent = new Command(ChangeContentButton_Clicked);
+            DeleteContent = new Command(DeleteContentButton_Clicked);
         }
-
-        public string IDchannel
+        async void DeleteContentButton_Clicked()
         {
-            get => idchannel;
-            set => SetProperty(ref idchannel, value);
+            await ModifyDelete.DeletePribor();
+            await Shell.Current.GoToAsync("..");
         }
-
-        public string IDspisok
-        {
-            get => idspisok;
-            set => SetProperty(ref idspisok, value);
+        async void ChangeContentButton_Clicked() {
+            await ModifyDelete.ModifyPribor();
         }
-
-        public string ItemId
+        public List<Item> ResultItem
         {
-            get => itemId;
-            set => SetProperty(ref idchannel, value);
+            get
+            {
+                return resultItem;
+            }
+            set
+            {
+                resultItem = value;
+                OnPropertyChanged(nameof(ResultItem));
+            }
         }
     }
 }

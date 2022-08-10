@@ -62,12 +62,7 @@ namespace mobile_poverka_asset.ViewModels
                 ConnectionStatus = "Статус: " + Connection.getStatus();
                 Button_Connect = Connection.getStatusButton();
 
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    string alertstring = Connection.getStatus().Contains("установ") ?
-                                            Connection.getStatus() + " с базой данных \'test\'" : Connection.getStatus();
-                    DependencyService.Get<IMessage>().ShortAlert(alertstring);
-                });
+                
             }
         }
         void CreateNewProfButton_Clicked()
@@ -205,9 +200,15 @@ namespace mobile_poverka_asset.ViewModels
                 {
                     var json = Preferences.Get(Connection.ListOfDBProfiles, "none");
                     var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
+                    
 
                     Connlist = list.Where(arg => arg.ProfileName == selectedPicker).ToList();
                     Preferences.Set("LastProfId", Connlist[0].Id);
+
+                    var lastprofId = Preferences.Get("LastProfId", "none");
+                    int index = list.FindIndex(arg => arg.Id == lastprofId);
+                    Preferences.Set("LastConnDB", index);
+                    Button_Connect = true;
                 }
                 OnPropertyChanged(nameof(SelectedPicker));
             }

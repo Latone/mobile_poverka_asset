@@ -7,14 +7,9 @@ using mobile_poverka_asset.ViewModels;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using mobile_poverka_asset.Services;
-using mobile_poverka_asset.Models;
-using Xamarin.Essentials;
-using System.Text.Json;
-using System.Linq;
 
 namespace mobile_poverka_asset.Views
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AboutPage : ContentPage
     {
         public AboutPage()
@@ -22,20 +17,7 @@ namespace mobile_poverka_asset.Views
             InitializeComponent();
 
             List<Task> tasks = new List<Task>();
-            try
-            {
-                tasks.Add(Task.Run(() => Connection.Connect()));
-            }
-            catch (Exception ex)
-            {
-                //smth
-                Console.WriteLine("Error Content Page -<-" + ex.Message);
-
-            }
-        }
-        void picker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //connlist
+            tasks.Add(Task.Run(() => Connection.Connect()));
         }
         protected override bool OnBackButtonPressed()
         {
@@ -46,6 +28,7 @@ namespace mobile_poverka_asset.Views
                 {
                     DependencyService.Get<IAndroidMethods>().CloseApp();
                 }
+
             });
             return true;
         }
