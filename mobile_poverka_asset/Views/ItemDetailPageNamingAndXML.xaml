@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.ItemDetailPageNamingAndXML"
+             xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models">
+
+    <ContentPage.BindingContext>
+        <vm:ItemViewNamingAndXML/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        
+        <Grid
+            HorizontalOptions="FillAndExpand"
+                           RowSpacing="0"
+                           ColumnSpacing="0"
+                            RowDefinitions = "*,*,*,*" 
+                        ColumnDefinitions = "*"
+            Margin="10">
+
+            <Label Grid.Row="1" Grid.Column="0" Text="Как назвать текущий список?" HorizontalTextAlignment="Center" FontSize="26"/>
+            <Entry x:DataType="vm:ItemViewNamingAndXML" x:Name="profileName" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" Keyboard="Default" HorizontalTextAlignment="Center" VerticalTextAlignment="End" Text="{Binding ProfileName}" FontSize="20" />
+
+            <Button x:DataType="vm:ItemViewNamingAndXML" Grid.Row="3" Grid.Column ="0" FontSize="30" FontAttributes="Bold" Margin="0,0,0,25" Text="Очистить" Command="{Binding ClearName}" Clicked="Next_Entry_Clicked" VerticalOptions="End"/>
+            <Button x:DataType="vm:ItemViewNamingAndXML" Grid.Row="4" Grid.Column ="0" FontSize="30" FontAttributes="Bold" Margin="0,0,0,25" Text="Завершить" Command="{Binding Finish}" VerticalOptions="End"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

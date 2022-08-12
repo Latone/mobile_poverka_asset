@@ -5,17 +5,83 @@
              Shell.PresentationMode="ModalAnimated"
              Title="New Item"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.UseSafeArea="true">
+              xmlns:local="clr-namespace:mobile_poverka_asset.ViewModels"  
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models" 
+             ios:Page.UseSafeArea="true"
+             x:Name="BrowseItemsPage">
     <ContentPage.Content>
-        <StackLayout Spacing="3" Padding="15">
+        <StackLayout Padding="15">
             <Label Text="Серийный номер:" FontSize="Medium" />
-            <Entry x:Name="TopEntry" ReturnType="Next"  Text="{Binding Serial, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric"/>
+            <Entry x:DataType="local:NewItemViewModel" x:Name="TopEntry" ReturnType="Next"  Text="{Binding Serial, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric"/>
             <Label  Text="ID канала:" FontSize="Medium" />
-            <Editor x:Name="BottomEntry" Text="{Binding IDchannel, Mode=TwoWay}" AutoSize="TextChanges" Keyboard="Numeric" FontSize="Medium" Margin="0" />
+            <Entry x:DataType="local:NewItemViewModel" x:Name="BottomEntry" Text="{Binding IDchannel, Mode=TwoWay}" Keyboard="Numeric" FontSize="Medium" Margin="0" />
+            
             <StackLayout Orientation="Horizontal">
-                <Button Text="Назад" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
-                <Button Clicked="Next_Entry_Clicked" Text="Сохранить" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button x:DataType="local:NewItemViewModel" Text="Завершить" Command="{Binding CancelCommand, Mode=TwoWay}" HorizontalOptions="FillAndExpand"></Button>
+                <Button x:DataType="local:NewItemViewModel" Clicked="Next_Entry_Clicked" Text="Добавить" Command="{Binding SaveCommand, Mode=TwoWay}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
+            
+            
+            <RefreshView x:DataType="local:NewItemViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="ItemsDetailListView"
+                ItemsSource="{Binding Items}"
+                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackLayout Padding="1" x:DataType="model:Item">
+                                <Frame HasShadow="False" Padding="5" CornerRadius="10" BackgroundColor="Black">
+                                    <Frame HasShadow="False" CornerRadius="10" BackgroundColor="White" Padding="12">
+
+                                        <Grid HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"
+                               RowSpacing="0"
+                               ColumnSpacing="0"
+                               Margin="10"
+                              RowDefinitions = "*" 
+                              ColumnDefinitions = "*">
+
+
+                                            <Label Grid.Row="0" Grid.Column="0" Text="Серийный номер:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Serial}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="16" />
+
+                                            <Label Grid.Row="1" Grid.Column="0" Text="Номер канала:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" />
+
+                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding idchannel}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                        </Grid>
+                                    </Frame>
+                                </Frame>
+
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:NewItemViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+
+                            </StackLayout>
+
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+
+                </CollectionView>
+                </RefreshView>
         </StackLayout>
     </ContentPage.Content>
     

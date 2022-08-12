@@ -23,7 +23,7 @@ namespace mobile_poverka_asset.Views
 
             await BaseViewModel.DataStore.UpdateItemAsync(item);
 
-            await Navigation.PopAsync();
+            await Shell.Current.GoToAsync("..");
         }
     }
 }

@@ -15,7 +15,8 @@
             <CollectionView x:Name="connlist"
                 ItemsSource="{Binding Connlist}"
                 SelectionMode="None"
-                            HeightRequest="180">
+                            HeightRequest="180"
+                            IsVisible="{Binding WorkWithProfiles}">
                 <CollectionView.ItemTemplate >
 
                     <DataTemplate>
@@ -52,7 +53,7 @@
                                        VerticalTextAlignment="Start"
                             FontSize="16" />
 
-                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="2" Keyboard="Default"  Text="{Binding Password, Mode=TwoWay}" FontSize="16" />
+                            <Entry Margin="0,15,0,0" Grid.Row="1" Grid.Column="2" Keyboard="Default" IsPassword="True" Text="{Binding Password, Mode=TwoWay}" FontSize="16" />
 
                             <Label Grid.Row="2" Grid.Column="0" Text="База данных:" 
                             FontAttributes="Bold" 
@@ -82,7 +83,8 @@
                         ColumnDefinitions = "*"
                 Margin="0,5,0,0"
                 HeightRequest="60"
-                BackgroundColor="#0376F3">
+                BackgroundColor="#0376F3"
+                IsVisible="{Binding WorkWithProfiles}">
                 <Label  Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" FontAttributes="Bold" TextColor="White" Text="{Binding SelectedPicker, StringFormat='Выбран профиль {0}'}"  
                        FontSize="20" HorizontalTextAlignment="Center"  VerticalTextAlignment="Center"/>
                 <Label Grid.Row="2" Grid.Column ="0" Margin="0,0,0,0"  FontAttributes="Italic" TextColor="White" Text="Нажмите, чтобы изменить"  
@@ -95,24 +97,35 @@
                     TitleColor="#0376F3"  >
             </Picker>
             </Grid>
-            <Button x:DataType="vm:AboutViewModel" Grid.Row="4" Grid.Column ="0" Grid.ColumnSpan="3" Margin="0,15,0,0"  Text="Сохранить профиль" Command="{Binding SaveProfile}" VerticalOptions="Start"/>
-            <Button x:DataType="vm:AboutViewModel" Grid.Row="5" Grid.Column ="0" Grid.ColumnSpan="3"  Margin="0,0,0,25" Text="Создать новый профиль" Command="{Binding CreateNewProfile}" VerticalOptions="Start"/>
+            <Button IsVisible="{Binding WorkWithProfiles}" x:DataType="vm:AboutViewModel" Grid.Row="4" Grid.Column ="0" Grid.ColumnSpan="3" Margin="0,15,0,0"  Text="Сохранить профиль" Command="{Binding SaveProfile}" VerticalOptions="Start"/>
+            <Button IsVisible="{Binding WorkWithProfiles}" x:DataType="vm:AboutViewModel" Grid.Row="5" Grid.Column ="0" Grid.ColumnSpan="3"  Margin="0,0,0,25" Text="Создать новый профиль" Command="{Binding CreateNewProfile}" VerticalOptions="Start"/>
 
-            <Button x:DataType="vm:AboutViewModel" IsEnabled="{Binding Button_Connect}"   Text="Подключение к БД" Clicked="ConnectDBButton_Clicked" VerticalOptions="Start"/>
-
-            <Label Grid.Row="16" Margin="0,0,0,15"
-                               x:DataType="vm:AboutViewModel"
-                   Grid.Column ="0"
-                   Grid.ColumnSpan="2"
-                   Grid.RowSpan ="1"
-                   Text="{Binding ConnectionStatus}" 
-                   FontSize="16"
-                   HorizontalOptions="Center"
-                   FontFamily="serif"
-                   VerticalOptions="Start"
-                               Padding="10,0,0,0"/>
             
+            <Button IsVisible="{Binding WorkWithProfiles}" x:DataType="vm:AboutViewModel" IsEnabled="{Binding Button_Connect}"   Text="Подключение к БД" Clicked="ConnectDBButton_Clicked" VerticalOptions="Start"/>
 
+            <Grid 
+                HorizontalOptions="FillAndExpand"
+                           RowSpacing="0"
+                           ColumnSpacing="0"
+                            RowDefinitions = "*" 
+                        ColumnDefinitions = "*"
+                Margin="0,5,0,0"
+                HeightRequest="250"
+                IsVisible="{Binding GridButtons}">
+                <Button Grid.Row="1" Grid.Column ="0" FontSize="30" FontAttributes="Bold" IsVisible="{Binding ButtonRedactProfiles}" x:DataType="vm:AboutViewModel"   Margin="0,0,0,25" Text="Работа с профилем" Command="{Binding CommandRedactProfiles}" VerticalOptions="End"/>
+                <Button Grid.Row="1" Grid.Column ="0" FontSize="30" FontAttributes="Bold" IsVisible="{Binding VisibDissconnect}" x:DataType="vm:AboutViewModel" Margin="0,0,0,25" Text="Отключиться" Command="{Binding CommandDissconnect}" VerticalOptions="End"/>
+            </Grid>
+            <Label  Margin="0,0,0,15"
+                               x:DataType="vm:AboutViewModel"
+                   Text="{Binding ConnectionStatus}" 
+                   FontSize="20"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   FontFamily="serif"
+                   VerticalOptions="FillAndExpand"
+                               Padding="0,0,0,0"/>
+
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

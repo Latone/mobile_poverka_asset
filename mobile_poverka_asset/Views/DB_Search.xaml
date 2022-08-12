@@ -67,33 +67,34 @@
                                Margin="10"
                               RowDefinitions = "*" >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="0.5*" />
-                                    <ColumnDefinition Width="1.6*" />
-                                    <ColumnDefinition Width="1.8*"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.3*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="0.3*" />
+                                    <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Row="0" Grid.Column="1" Text="ID:" 
+                                <!--Label Grid.Row="0" Grid.Column="1" Text="ID:" 
+                            LineBreakMode="NoWrap" 
+                            FontAttributes="Bold" 
+                            FontSize="16" /-->
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Имя:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="0" Grid.Column="2" Text="Имя:" 
+                                <Label Grid.Row="1" Grid.Column="0" Text="Дата:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="2" Grid.Column="2" Text="Дата:" 
+                                <Label Grid.Row="0" Grid.Column="2" Text="Кол-во:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
+                                       Margin="20,0,0,0"
                             FontSize="16" />
-
-                                <Label Grid.Row="0" Grid.Column="3" Text="Кол-во:" 
-                            LineBreakMode="NoWrap" 
-                            FontAttributes="Bold" 
-                            FontSize="16" />
-                                <Label Grid.Row="2" Grid.Column="3" Text="Завершено:" 
+                                <!--Label Grid.Row="2" Grid.Column="3" Text="Завершено:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
@@ -101,26 +102,27 @@
                                 <Label Grid.Row="0" Grid.Column="4" Text="Комментарий:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
-                            FontSize="16" />
+                            FontSize="16" /-->
 
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Id}" 
+                                <!--Label Grid.Row="1" Grid.Column="1" Text="{Binding Id}" 
+                            LineBreakMode="NoWrap" 
+                            FontSize="16" /-->
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}"  Grid.ColumnSpan="3"
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
-                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding Name}" 
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Date}" 
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
-                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding Date}" 
+                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Count}" 
                             LineBreakMode="NoWrap" 
+                                       VerticalTextAlignment="Start"
                             FontSize="16" />
-                                <Label Grid.Row="1" Grid.Column="3" Text="{Binding Count}" 
-                            LineBreakMode="NoWrap" 
-                            FontSize="16" />
-                                <Label Grid.Row="3" Grid.Column="3" Text="{Binding Complete}" 
+                                <!--Label Grid.Row="3" Grid.Column="3" Text="{Binding Complete}" 
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
                                 <Label Grid.Row="1" Grid.Column="4" Grid.RowSpan="3" Text="{Binding Comment}" LineBreakMode="WordWrap"
                             
-                            FontSize="16" />
+                            FontSize="16" /-->
                             </Grid>
                             <BoxView Color="Black" WidthRequest ="100" HeightRequest="1"/>
 

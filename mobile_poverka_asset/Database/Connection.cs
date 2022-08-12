@@ -30,16 +30,7 @@ namespace mobile_poverka_asset.Database
             connText = val;
             button = buttonf;
             NotifyStaticPropertyChanged("ConnectionUpdate");
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var json = Preferences.Get(ListOfDBProfiles, "none");
-                var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
-                var pref = Preferences.Get("LastConnDB", 0);
-
-                string alertstring = Connection.getStatus().Contains("установ") ?
-                                        Connection.getStatus() + " с базой данных \'"+list[pref].Database+"\'" : Connection.getStatus();
-                DependencyService.Get<IMessage>().ShortAlert(alertstring);
-            });
+           
         }
         static string connText = "Нет соединения";
         static bool button = true;
@@ -78,6 +69,30 @@ namespace mobile_poverka_asset.Database
             Preferences.Set(ListOfDBProfiles, json);
 
             Preferences.Set("LastConnDB", index);
+        }
+        public static bool Disconnect() {
+            if (!(conn.State == ConnectionState.Open))
+                return false;
+
+
+            changeConnectionStatusTo("Разрываем соединение..", false);
+            try
+            {
+                conn.Close();
+                if (conn != null && conn.State == ConnectionState.Closed)
+                    changeConnectionStatusTo("Соединение разорвано", false); //--Триггер на изменение поля
+                else
+                {
+                    changeConnectionStatusTo("Ошибка отключения", true); //--Триггер на изменение поля
+                }
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+                changeConnectionStatusTo("Ошибка отключения", true);
+            }
+            return true;
         }
         public static void Connect()
         {

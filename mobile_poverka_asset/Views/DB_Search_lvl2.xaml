@@ -16,82 +16,86 @@
         <StackLayout>
             <CollectionView x:Name="currentSpisok"
                 ItemsSource="{Binding CurrentSpisok}"
-                SelectionMode="None">
+                SelectionMode="None"
+                            Margin="10"
+                            HeightRequest="130">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Padding="10" x:DataType="model:Spisok" BackgroundColor="#8BD2FA" >
-                            <Grid HorizontalOptions="FillAndExpand"
-                               RowSpacing="0"
-                               ColumnSpacing="0"
-                               Margin="0"
-                              RowDefinitions ="0.1*,*,*,*,*,0.9*" 
-                              ColumnDefinitions="1*,2*">
+                        <Grid
+                            HeightRequest="90"
+                            HorizontalOptions="FillAndExpand"
+                           RowSpacing="0"
+                           ColumnSpacing="0"
+                           
+                            RowDefinitions = "*" 
+                        ColumnDefinitions = "1.6*,2*,3*,6*"
+                            x:DataType="model:Spisok">
 
-                                <Label Grid.Row="1" Grid.Column="0" Text="ID:" 
+                            <Label Grid.Row="0" Grid.Column="0" Text="ID списка:" 
+                                   Grid.ColumnSpan="3"
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
-                            FontSize="16" />
-
-                                <Label Grid.Row="2" Grid.Column="0" Text="Имя:" 
-                            LineBreakMode="NoWrap" 
-                            FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
                             FontSize="16" />
 
-                                <Label Grid.Row="3" Grid.Column="0" Text="Дата:" 
+                                <Label Grid.Row="1" Grid.Column="0" Text="Имя:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
+                                       Grid.ColumnSpan="3"
                             FontSize="16" />
 
-                                <Label Grid.Row="4" Grid.Column="0" Text="Кол-во:" 
+                                <Label Grid.Row="2" Grid.Column="0" Text="Дата:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
-                            FontSize="16" />
-                                <Label Grid.Row="5" Grid.Column="0" Text="Завершено:" 
-                            LineBreakMode="NoWrap" 
-                            FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
+                                       Grid.ColumnSpan="3"
                             FontSize="16" />
 
-                                <Label Grid.Row="6" Grid.Column="0" Text="Комментарий:" 
+                                <Label Grid.Row="0" Grid.Column="2" Text="Кол-во:" 
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
-                                       VerticalTextAlignment="Center"
+                                       Grid.ColumnSpan="3"
+                                       Margin="100,0,0,0"
                             FontSize="16" />
-                                <Entry x:Name=""  Grid.Row="1" Grid.Column="1" Keyboard="Numeric" Text="{Binding Id, Mode=TwoWay}" 
+                                <Label Grid.Row="1" Grid.Column="2" Text="Завершено:" 
+                            LineBreakMode="NoWrap" 
+                                       Grid.ColumnSpan="3"
+                                       Margin="100,0,0,0"
+                            FontAttributes="Bold" 
                             FontSize="16" />
-                                <Entry  Grid.Row="2" Grid.Column="1" Keyboard="Chat" Text="{Binding Name, Mode=TwoWay}"
+
+                                <Label Grid.Row="2" Grid.Column="2" Text="Комментарий:" 
+                            LineBreakMode="NoWrap" 
+                                       Grid.ColumnSpan="3"
+                                       Margin="100,0,0,0"
+                            FontAttributes="Bold" 
                             FontSize="16" />
-                                <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Date, Mode=TwoWay}" 
+                            <Label Margin="40,0,0,0"  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Id, Mode=TwoWay}" 
                             FontSize="16" />
-                                <Entry Grid.Row="4" Grid.Column="1" Keyboard="Numeric"  Text="{Binding Count, Mode=TwoWay}"
+                            <Label  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="5,0,0,0" Text="{Binding Name, Mode=TwoWay}"
                             FontSize="16" />
-                                <Entry  Grid.Row="5" Grid.Column="1" Keyboard="Default"  Text="{Binding Complete, Mode=TwoWay}"
+                            <Label Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,0,0,0" Text="{Binding Date, Mode=TwoWay}" 
                             FontSize="16" />
-                                <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Comment, Mode=TwoWay}"
+                            <Label Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" Margin="95,0,0,0"  Text="{Binding Count, Mode=TwoWay}"
+                            FontSize="16" />
+                            <Label  Grid.Row="1" Grid.Column="3"  Grid.ColumnSpan="3" Margin="120,0,0,0" Text="{Binding Complete, Mode=TwoWay}"
+                            FontSize="16" />
+                            <Label Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="10,20,0,0" Text="{Binding Comment, Mode=TwoWay}"
                             FontSize="16" />
                                 
                             </Grid>
 
-                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Grid HorizontalOptions="Fill"
+            <Grid VerticalOptions="Start" 
+                HorizontalOptions="Fill"
                                RowSpacing="0"
                                ColumnSpacing="0"
-                               Margin="10"
+                               Margin="10,0,10,0"
                               RowDefinitions = "*" 
-                              ColumnDefinitions="1*,0.3*,1*">
-                <Button IsVisible="{Binding RedVis}"  HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Редактировать" Clicked="ModifyPoolButton_Clicked"  VerticalOptions="Start"/>
-                <Button IsVisible="{Binding DelVis}"  Grid.Row="0" Grid.Column="2" Text="Удалить пулл" Command="{Binding DeletePool}" VerticalOptions="Start"/>
-
-                <Button IsVisible="{Binding DropVis}" HeightRequest="200" Grid.Row="0" Grid.Column="0" Text="Отмена" Clicked="DropModifyPoolButton_Clicked"  VerticalOptions="Start"/>
-                <Button IsVisible="{Binding SaveVis}" Grid.Row="0" Grid.Column="2" Text="Сохранить" Clicked="SaveModifyPoolButton_Clicked" VerticalOptions="Start"/>
-            </Grid>
+                              ColumnDefinitions="*"
+                  HeightRequest="140">
+                <Button  Margin="10,0,10,0" Grid.Row="0" Grid.Column="0" Text="Удалить пулл" Command="{Binding DeletePool}" VerticalOptions="StartAndExpand"/>
+                </Grid>
             <SearchBar x:Name="searchBar"
                        x:DataType="vm:DB_Search_lvl2ViewModel"
                     Placeholder="Search items..."

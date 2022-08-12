@@ -3,6 +3,7 @@ using mobile_poverka_asset.Services;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -91,7 +92,8 @@ namespace mobile_poverka_asset.Database
 
             return await Task.FromResult(true);
         }
-            public async static Task<bool> ModifyPool()
+       
+        public async static Task<bool> ModifyPool()
         {
 
             string spisok_id = "";

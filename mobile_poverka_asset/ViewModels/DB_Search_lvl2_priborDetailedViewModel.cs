@@ -24,6 +24,7 @@ namespace mobile_poverka_asset.ViewModels
         }
         async void ChangeContentButton_Clicked() {
             await ModifyDelete.ModifyPribor();
+            await Shell.Current.GoToAsync("..");
         }
         public List<Item> ResultItem
         {

@@ -10,9 +10,9 @@
              ios:Page.UseSafeArea="true"
              Shell.PresentationMode="ModalAnimated">
 
-    <ContentPage.ToolbarItems>
+    <!--ContentPage.ToolbarItems>
         <ToolbarItem Text="Добавить" Command="{Binding AddItemCommand}" />
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems-->
 
     <ContentPage.Resources>
         <local:YesNoMaybeToColorConverter x:Key="YesNoMaybeToColorConverter" />
@@ -22,13 +22,12 @@
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
     <ContentPage.Content>
-        <StackLayout>
-    <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <StackLayout Margin="10">
+            <!--RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
-                SelectionMode="None"
-                Header="{Binding .}">
-
+                SelectionMode="None">
+                    
             <CollectionView.HeaderTemplate>
 
                 <DataTemplate>
@@ -37,8 +36,7 @@
                         <Label IsVisible="{Binding pool_error}" TextColor="#BC0000" TextDecorations="Underline" FontAttributes="Bold,Italic" Text="Поле названия не должно быть пустым" FontSize="Medium" Margin="0,0,10,0" HorizontalTextAlignment="Center"/>
                                 <Entry  x:Name="pool_entry" Text="{Binding pool_name, Mode=TwoWay}"  FontSize="Medium" Margin="0" />
 
-                        <Button Text="Создать запись" Clicked="WriteDBButton_Clicked" VerticalOptions="Start"/>
-
+                      
                     </StackLayout>
 
                 </DataTemplate>
@@ -99,8 +97,19 @@
            
 
         </CollectionView>
-        
-    </RefreshView>
+            </RefreshView-->
+            <Grid 
+                HorizontalOptions="FillAndExpand"
+                           RowSpacing="0"
+                           ColumnSpacing="0"
+                            RowDefinitions = "*" 
+                        ColumnDefinitions = "*"
+                HeightRequest="250">
+                <Button x:DataType="local:ItemsViewModel" Grid.Row="1" Grid.Column ="0" Margin="0,0,0,20" FontAttributes="Bold" FontSize="30" Text="Создать" Command="{Binding AddItemCommand}" VerticalOptions="End"/>
+
+
+            </Grid>
+            
         </StackLayout>
     </ContentPage.Content>
 

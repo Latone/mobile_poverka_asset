@@ -7,16 +7,17 @@ using Xamarin.Forms.Xaml;
 using System.Threading.Tasks;
 using System.Threading;
 using mobile_poverka_asset.Services;
+using System.Data;
 
 namespace mobile_poverka_asset.Views
 {
     public partial class ItemsPage : ContentPage
     {
-        ItemsViewModel _viewModel;
+        readonly ItemsViewModel _viewModel;
         public ItemsPage()
         {
             InitializeComponent();
-
+            Title = "Создание списка приборов";
             BindingContext = _viewModel = new ItemsViewModel();
         }
 
@@ -53,7 +54,7 @@ namespace mobile_poverka_asset.Views
             return true;
         }
 
-            async void WriteDBButton_Clicked(object sender, EventArgs e)
+            /*async void WriteDBButton_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -73,13 +74,16 @@ namespace mobile_poverka_asset.Views
                     return;
                 }
                 await InsertDevice.Query(_viewModel.pool_name);
-                if(Connection.getConn() == null)
+                if (Connection.getConn() == null ||
+                Connection.getConn().State == ConnectionState.Closed)
                     DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
                 else
-                    DependencyService.Get<IMessage>().LongAlert("Добавлено "+_viewModel.Items.Count+ " приборов\nв новый список \""+ _viewModel.pool_name+"\"");
+                {
+                    DependencyService.Get<IMessage>().LongAlert("Добавлено " + _viewModel.Items.Count + " приборов\nв новый список \"" + _viewModel.pool_name + "\"");
+                    _viewModel.pool_name = "";
+                    _viewModel.Items.Clear();
+                } 
                 
-                _viewModel.pool_name = "";
-                _viewModel.Items.Clear();
             }
             catch (Exception ex)
             {
@@ -88,7 +92,7 @@ namespace mobile_poverka_asset.Views
 
             }
 
-        }
+        }*/
 
     }
     

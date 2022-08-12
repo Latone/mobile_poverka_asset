@@ -17,6 +17,8 @@ namespace mobile_poverka_asset.ViewModels
     public class AboutViewModel : BaseViewModel
     {
         public Command SaveProfile { get; }
+        public Command CommandRedactProfiles { get;}
+        public Command CommandDissconnect { get; }
         public Command CreateNewProfile {get;}
         private bool createfrombutton = false;
         private bool selectedPickerWasSelected = false;
@@ -25,9 +27,17 @@ namespace mobile_poverka_asset.ViewModels
             Title = "Главная";
             Connection.StaticPropertyChanged += OnCSChange;
             Connection.changeConnectionStatusTo("Нет соединения",true);
-            Button_Connect = true;
+
+            Button_Connect = false;
+            WorkWithProfiles = false;
+            ButtonRedactProfiles = true;
+            VisibDissconnect = false;
+            GridButtons = false;
+
             SaveProfile = new Command(SaveConProfButton_Clicked);
             CreateNewProfile = new Command(CreateNewProfButton_Clicked);
+            CommandRedactProfiles = new Command(RedactProfilesButton_Clicked);
+            CommandDissconnect = new Command(DissconnectButton_Clicked);
             //Preferences.Clear();
             var json = Preferences.Get(Connection.ListOfDBProfiles, "none");
             //Preferences.Set("LastConnDB", 0);
@@ -51,20 +61,42 @@ namespace mobile_poverka_asset.ViewModels
                 Connlist[0].Id = generateID();
             Preferences.Set("LastProfId", Connlist[0].Id);
         }
-        public string generateID()
-        {
-            return Guid.NewGuid().ToString("N");
-        }
         void OnCSChange(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "ConnectionUpdate")
             {
-                ConnectionStatus = "Статус: " + Connection.getStatus();
-                Button_Connect = Connection.getStatusButton();
-
                 
+                Button_Connect = Connection.getStatusButton();
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    var json = Preferences.Get(Connection.ListOfDBProfiles, "none");
+                    var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
+                    var pref = Preferences.Get("LastConnDB", 0);
+
+                    string alertstring = Connection.getStatus().Contains("установ") ?
+                                            Connection.getStatus() + " с базой данных \'" + list[pref].Database + "\'" : Connection.getStatus();
+                    DependencyService.Get<IMessage>().ShortAlert(alertstring);
+                    if (Connection.getStatus().Contains("установ"))
+                    {
+                        Button_Connect = false;
+                        WorkWithProfiles = false;
+                        ButtonRedactProfiles = false;
+                        VisibDissconnect = true;
+                        GridButtons = true;
+                        ConnectionStatus = "Статус: " + Connection.getStatus() + "\nПрофиль: " + list[pref].ProfileName;
+                    }
+                    else
+                        ConnectionStatus = "Статус: " + Connection.getStatus();
+                });
+
             }
         }
+        #region Profiles
+        public string generateID()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+      
         void CreateNewProfButton_Clicked()
         {
             selectedPickerWasSelected = true;
@@ -172,6 +204,7 @@ namespace mobile_poverka_asset.ViewModels
 
             }
         }
+        
         private List<string> listPicker;
         public List<string> ListPicker
         {
@@ -226,6 +259,49 @@ namespace mobile_poverka_asset.ViewModels
                 OnPropertyChanged(nameof(Connlist));
             }
         }
+        #endregion
+        public void RedactProfilesButton_Clicked() {
+            Button_Connect = true;
+            WorkWithProfiles = true;
+            ButtonRedactProfiles = false;
+            GridButtons = false;
+        }
+        public void DissconnectButton_Clicked() {
+            if (Connection.Disconnect() == false)
+                return;
+
+            Button_Connect = false;
+            WorkWithProfiles = false;
+            ButtonRedactProfiles = true;
+            VisibDissconnect = false;
+            GridButtons = true;
+
+        }
+        private bool gridButtons;
+        public bool GridButtons
+        {
+            get
+            {
+                return gridButtons;
+            }
+            set
+            {
+                gridButtons = value;
+                OnPropertyChanged(nameof(GridButtons));
+            }
+        }
+        private bool visibDissconnect;
+        public bool VisibDissconnect {
+            get
+            {
+                return visibDissconnect;
+            }
+            set
+            {
+                visibDissconnect = value;
+                OnPropertyChanged(nameof(VisibDissconnect));
+            }
+        }
         private bool VButton_Connect;
         public bool Button_Connect
         {
@@ -237,6 +313,32 @@ namespace mobile_poverka_asset.ViewModels
             {
                 VButton_Connect = value;
                 OnPropertyChanged(nameof(Button_Connect));
+            }
+        }
+        private bool buttonRedactProfiles;
+        public bool ButtonRedactProfiles
+        {
+            get
+            {
+                return buttonRedactProfiles;
+            }
+            set
+            {
+                buttonRedactProfiles = value;
+                OnPropertyChanged(nameof(ButtonRedactProfiles));
+            }
+        }
+        private bool workWithProfiles;
+        public bool WorkWithProfiles
+        {
+            get
+            {
+                return workWithProfiles;
+            }
+            set
+            {
+                workWithProfiles = value;
+                OnPropertyChanged(nameof(WorkWithProfiles));
             }
         }
         private string VConnectionStatus;

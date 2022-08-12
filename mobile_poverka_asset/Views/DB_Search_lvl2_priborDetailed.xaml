@@ -23,22 +23,22 @@
                            RowSpacing="0"
                            ColumnSpacing="0"
                            Margin="1"
-                            RowDefinitions = "*,0.02*,*,*,*,*" 
+                            RowDefinitions = "0.35*,*,0.02*,*,*,*,*" 
                         ColumnDefinitions = "*,0.3*,1.2*"
                               x:DataType="model:Item">
 
-                            <Label Grid.Row="0" Grid.Column="0"  Text="ID:" FontSize="20" />
-                            <Label Margin="25,0,0,0"  Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontSize="20"/>
-
-                            <Label Margin="0,15,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="Серийный номер:" FontSize="20" />
-                            <Entry Margin="0,25,0,0" Grid.Row="2" Grid.Column="0" Text="{Binding Serial}" FontSize="20" Keyboard="Numeric"/>
-
-                            <Label Margin="0,15,0,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер канала:" FontSize="20" />
-                            <Entry Margin="0,25,0,0" Grid.Row="3" Grid.Column="0" Text="{Binding idchannel}" FontSize="20" Keyboard="Numeric"/>
-
-                            <Label Margin="0,15,0,0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер списка:" FontSize="20" />
-                            <Entry Margin="0,25,0,0" Grid.Row="4" Grid.Column="0" Text="{Binding spisok_id}" FontSize="20" Keyboard="Numeric"/>
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="ID прибора:" FontSize="20" />
+                            <Label Margin="110,0,0,0"  Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Text="{Binding Id}" FontSize="20"/>
                             
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер списка:" FontSize="20" />
+                            <Label Margin="140,0,0,0" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" Text="{Binding spisok_id}" FontSize="20" />
+
+                            <Label  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="Серийный номер:" FontSize="20" VerticalTextAlignment="Center"/>
+                            <Entry Margin="70,0,0,0"  Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" Text="{Binding Serial}" FontSize="20" Keyboard="Numeric"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Text="Номер канала:" FontSize="20" VerticalTextAlignment="Center"/>
+                            <Entry Margin="45,0,0,0" Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" Text="{Binding idchannel}" FontSize="20" Keyboard="Numeric"/>
+
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

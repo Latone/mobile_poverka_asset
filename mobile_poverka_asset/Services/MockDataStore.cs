@@ -22,7 +22,18 @@ namespace mobile_poverka_asset.Services
 
             return await Task.FromResult(true);
         }
-
+        public async Task<int> GetNumberOfitems() {
+            return await Task.FromResult(items.Count);
+        }
+        public async Task<List<Item>> GetAllitems()
+        {
+            return await Task.FromResult(items);
+        }
+        public async Task<bool> ClearAllItems()
+        {
+            items.Clear();
+            return await Task.FromResult(true);
+        }
         public async Task<bool> UpdateItemAsync(Item item)
         {
             var oldItem = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();

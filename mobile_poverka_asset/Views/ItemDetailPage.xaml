@@ -6,9 +6,9 @@
 
     <StackLayout Spacing="20" Padding="15">
         <Label Text="Серийный номер:" FontSize="Medium" />
-        <Editor Text="{Binding Serial}" FontSize="Small" Keyboard="Numeric"/>
+        <Entry Text="{Binding Serial}" FontSize="Small" Keyboard="Numeric"/>
         <Label Text="ID канала:" FontSize="Medium" />
-        <Editor Text="{Binding IDchannel}" FontSize="Small" Keyboard="Numeric"/>
+        <Entry Text="{Binding IDchannel}" FontSize="Small" Keyboard="Numeric"/>
         <Button Text="Сохранить изменения" Clicked="ChangeContentButton_Clicked" HorizontalOptions="FillAndExpand"></Button>
     </StackLayout>
     

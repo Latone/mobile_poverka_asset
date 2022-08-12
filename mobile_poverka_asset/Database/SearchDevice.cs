@@ -3,6 +3,7 @@ using mobile_poverka_asset.ViewModels;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace mobile_poverka_asset.Database
         public static List<Item> currentItem;
         public static List<Spisok> GetSearchResultsSpisok(string query_pretext,string numOfRows)
         {
-            if (Connection.getConn() == null) return new List<Spisok>();
+            if (Connection.getConn() == null ||
+                Connection.getConn().State == ConnectionState.Closed) return new List<Spisok>();
 
 
             string query="";
@@ -52,6 +54,35 @@ namespace mobile_poverka_asset.Database
             reader.Close();
 
             return list;
+        }
+       // select count(*) from spisok where name =
+        public static int GetNumberOfTodaysSpisok(string toLookFor) {
+            if (Connection.getConn() == null ||
+                Connection.getConn().State == ConnectionState.Closed) return -1;
+
+            string sp_query = "select count(*) from spisok where name like \'"+toLookFor+"%\';";
+            int endValue = -1;
+            NpgsqlCommand cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+
+            try
+            {
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                while (reader.Read())
+                {
+                    endValue = Int32.Parse(reader.GetValue(0).ToString());
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+
+            }
+
+            return endValue;
         }
         public static List<Item> GetSearchResultsPribor(string query_pretext, string spisok_id)
         {
