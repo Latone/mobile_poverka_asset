@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using mobile_poverka_asset.Database;
+using System.Data;
+using mobile_poverka_asset.Services;
 
 namespace mobile_poverka_asset.ViewModels
 {
@@ -22,6 +24,12 @@ namespace mobile_poverka_asset.ViewModels
         }
         private async void OnAddItem(object obj)
         {
+            if (Connection.getConn() == null ||
+                    Connection.getConn().State == ConnectionState.Closed)
+            {
+                DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
+                return;
+            }
             await Shell.Current.GoToAsync(nameof(NewItemPage));
             //await App.Current.MainPage.Navigation.PushAsync(new NewItemPage());
         }

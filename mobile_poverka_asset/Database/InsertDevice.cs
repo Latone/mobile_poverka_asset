@@ -33,8 +33,8 @@ namespace mobile_poverka_asset.Database
 
 
             //Spisok table
-            DateTime myDateTime = DateTime.Now;
-            string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd");
+            string sqlFormattedDate = DateTime.Today.ToString("dd.MM.yyyy");
+            //string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd");
 
             string sp_query = "INSERT INTO spisok(name, date, count, complete, comment) values (\'" +
                 pool_name + "\', \'" + sqlFormattedDate + "\', " + list.Count +", " +false+ ", " + "\'Добавлено с телефона\') RETURNING id;";
@@ -80,7 +80,7 @@ namespace mobile_poverka_asset.Database
                 //await BaseViewModel.DataStore.DeleteItemAsync(serial.ToString(),channel.ToString());
                 Console.WriteLine("Number of rows affected: " + numAffected);
             }
-            foreach (Item arg in list) await BaseViewModel.DataStore.DeleteItemAsync(arg.Serial, arg.idchannel);
+            //foreach (Item arg in list) await BaseViewModel.DataStore.DeleteItemAsync(arg.Serial, arg.idchannel);
 
         }
     }

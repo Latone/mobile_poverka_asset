@@ -55,7 +55,35 @@ namespace mobile_poverka_asset.Database
 
             return list;
         }
-       // select count(*) from spisok where name =
+        // select count(*) from spisok where name =
+        public static int GetLastSpisoksID()
+        {
+            if (Connection.getConn() == null ||
+                Connection.getConn().State == ConnectionState.Closed) return -1;
+            string sp_query = "select distinct id from spisok order by id desc limit 1;";
+            int endValue = -1;
+            NpgsqlCommand cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+
+            try
+            {
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                while (reader.Read())
+                {
+                    endValue = Int32.Parse(reader.GetValue(0).ToString());
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+
+            }
+
+            return endValue;
+        }
         public static int GetNumberOfTodaysSpisok(string toLookFor) {
             if (Connection.getConn() == null ||
                 Connection.getConn().State == ConnectionState.Closed) return -1;

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using mobile_poverka_asset.Database;
 using mobile_poverka_asset.Services;
+using System.Linq;
 
 namespace mobile_poverka_asset.ViewModels
 {
@@ -79,6 +80,18 @@ namespace mobile_poverka_asset.ViewModels
 
         private async void OnSave()
         {
+            var list = await DataStore.GetAllitems();
+
+            if (list.Where(arg => arg.Serial == Serial).Any())
+            {
+                DependencyService.Get<IMessage>().ShortAlert("Данный серийный номер уже существует в текущем списке");
+                return;
+            }
+            if (list.Where(arg => arg.idchannel == idchannel).Any())
+            {
+                DependencyService.Get<IMessage>().ShortAlert("Данный номер канала уже используется в текущем списке");
+                return;
+            }
 
             Item newItem = new Item()
             {

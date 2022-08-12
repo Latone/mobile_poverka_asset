@@ -33,34 +33,41 @@ namespace mobile_poverka_asset.ViewModels
             {
                 displayAlert = await App.Current.MainPage.DisplayAlert("Отправить на ПК XML?", "", "Да", "Нет");
                 var numbeOfItems = await DataStore.GetNumberOfitems();
-                if (displayAlert) {//XML
+                var listItems = await DataStore.GetAllitems();
+                try {
 
-                    Models.Spisok spisok = new Models.Spisok() {
-                        Id = "-1",
-                        Name = ProfileName,
-                        Date = DateTime.Today.ToString(),
-                        Count =numbeOfItems.ToString(),
-                        Complete = "False",
-                        Comment = "Добавлено с телефона",
-                    };
-                    XML.XML.CreateXML(await DataStore.GetAllitems(),spisok);
-                }
-                try { 
-                
-                if (Connection.getConn() == null ||
-                Connection.getConn().State == ConnectionState.Closed)
-                    DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
-                else
-                {
-                        
+                    if (Connection.getConn() == null ||
+                    Connection.getConn().State == ConnectionState.Closed)
+                    {
+                        DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
+                        return;
+                    }
+                    else
+                    {
                         await InsertDevice.Query(ProfileName);
                         DependencyService.Get<IMessage>().LongAlert("Добавлено " + numbeOfItems + " приборов\nв новый список \"" + ProfileName + "\"");
 
                         ProfileName = "";
-                        await DataStore.ClearAllItems();
-                }
 
-            }
+                    }
+
+                    if (displayAlert)
+                    {//XML
+                        
+                        Models.Spisok spisok = new Models.Spisok()
+                        {
+                            Id = SearchDevice.GetLastSpisoksID().ToString(),
+                            Name = ProfileName,
+                            Date = DateTime.Today.ToString("dd.MM.yyyy"),
+                            Count = numbeOfItems.ToString(),
+                            Complete = "False",
+                            Comment = "Добавлено с телефона",
+                        };
+                        XML.XML.CreateXML(listItems, spisok);
+                    }
+                    await DataStore.ClearAllItems();
+
+                }
             catch (Exception ex)
             {
                 //smth

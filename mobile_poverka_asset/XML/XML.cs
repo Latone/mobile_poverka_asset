@@ -15,6 +15,7 @@ namespace mobile_poverka_asset.XML
             xmlMarkUp = new XElement("Full");
             XElement branch1 = new XElement("Pribori");
             XElement branch2 = new XElement("Spisok",
+                                    new XElement("ID", spisok.Id),
                                     new XElement("Name",spisok.Name),
                                     new XElement("Date", spisok.Date),
                                     new XElement("Count", spisok.Count),
@@ -23,9 +24,9 @@ namespace mobile_poverka_asset.XML
 
 
             foreach (Models.Item item in items) {
-                branch1.Add("Channel_ID", item.idchannel);
-                branch1.Add("Serial", item.Serial);
-                branch1.Add("Spisok_ID", item.spisok_id);
+                branch1.Add(new XElement("Serial", item.Serial),
+                    new XElement("Channel_ID", item.idchannel));
+                            //new XElement ("Spisok_ID", spisok.Id));
             }
 
             xmlMarkUp.Add(branch2);

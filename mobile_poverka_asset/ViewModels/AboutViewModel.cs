@@ -86,7 +86,14 @@ namespace mobile_poverka_asset.ViewModels
                         ConnectionStatus = "Статус: " + Connection.getStatus() + "\nПрофиль: " + list[pref].ProfileName;
                     }
                     else
+                    {
+                        Button_Connect = false;
+                        WorkWithProfiles = false;
+                        ButtonRedactProfiles = true;
+                        VisibDissconnect = false;
+                        GridButtons = true;
                         ConnectionStatus = "Статус: " + Connection.getStatus();
+                    }
                 });
 
             }

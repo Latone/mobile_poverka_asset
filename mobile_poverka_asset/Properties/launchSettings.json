@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "mobile_poverka_asset": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Ключ": "Значение"
+      },
+      "nativeDebugging": false
+    }
+  }
+}

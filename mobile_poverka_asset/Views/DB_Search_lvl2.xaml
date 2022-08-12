@@ -135,31 +135,40 @@
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="0" Grid.Column="2" Text="Серийный номер:" 
+                                <Label Grid.Row="0" Grid.Column="2" Text="Серийный №:" 
+                                       Grid.ColumnSpan="3"
+                                       Margin="110,0,0,0"
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="0" Grid.Column="3" Text="Канал:" 
+                                <Label Grid.Row="1" Grid.Column="2" Text="Канал:" 
+                                       Grid.ColumnSpan="2"
+                                       Margin="110,0,0,0"
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="0" Grid.Column="4" Text="ID списка:" 
+                                <Label Grid.Row="1" Grid.Column="1" Text="ID списка:" 
+                                       Grid.ColumnSpan="2"
                             LineBreakMode="NoWrap" 
                             FontAttributes="Bold" 
                             FontSize="16" />
 
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Id}" 
+                                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Id}" 
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
-                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding Serial}" 
+                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Serial}" 
+                                       Grid.ColumnSpan="2"
+                                       Margin="60,0,0,0"
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
                                 <Label Grid.Row="1" Grid.Column="3" Text="{Binding idchannel}" 
+                                       Margin="10,0,0,0"
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
-                                <Label Grid.Row="1" Grid.Column="4" Text="{Binding spisok_id}" 
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding spisok_id}" 
+                                       Margin="55,0,0,0"
                             LineBreakMode="NoWrap" 
                             FontSize="16" />
                             </Grid>

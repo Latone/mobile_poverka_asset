@@ -14,6 +14,7 @@ using System.Data.Sql;
 using System.Text.Json;
 using Xamarin.Forms;
 using mobile_poverka_asset.Services;
+using System.Linq;
 
 namespace mobile_poverka_asset.Database
 {
@@ -35,10 +36,15 @@ namespace mobile_poverka_asset.Database
         static string connText = "Нет соединения";
         static bool button = true;
         static NpgsqlConnection conn;
+        static SqlConnection connMS;
         public static string ListOfDBProfiles = "ListOfDBProfiles";
         public static NpgsqlConnection getConn()
         {
             return conn;
+        }
+        public static SqlConnection getConnMS()
+        {
+            return connMS;
         }
         static public string getStatus()
         {
@@ -50,8 +56,6 @@ namespace mobile_poverka_asset.Database
         }
         private static string getSettings()
         {
-
-
             var json = Preferences.Get(ListOfDBProfiles, "none");
             var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
 
@@ -62,6 +66,20 @@ namespace mobile_poverka_asset.Database
                                 "User Id=" + list[pref].UserId + ";" +
                                 "Password=" + list[pref].Password + ";" +
                                 "Database=" + list[pref].Database;
+        }
+
+        public static string getSettingsMS()
+        {
+            var json = Preferences.Get(ListOfDBProfiles, "none");
+            var list = JsonSerializer.Deserialize<List<Models.ConnectionProfile>>(json);
+
+            var pref = Preferences.Get("LastConnDB", 0);
+
+            return @"Server="+list[pref].Server +","+ list[pref].Port + ";" +
+                                "User Id=" + list[pref].UserId + ";" +
+                                "Password=" + list[pref].Password + ";" +
+                                "Initial Catalog=" + list[pref].Database + ";" +
+                                "MultipleActiveResultSets = true";
         }
         public static void SaveCurrentProfile(List<Models.ConnectionProfile> Updatedlist, int index)
         {
@@ -96,14 +114,55 @@ namespace mobile_poverka_asset.Database
         }
         public static void Connect()
         {
+            try
+            {
+                using (var db = new PoverkaContext())
+                {
+                    var blogs = db.Spisoks
+                        .Where(b => b.Id > 3)
+                        .OrderByDescending(b => b.Id)
+                        .ToList();
+
+                    var gg = blogs;
+                }
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+                changeConnectionStatusTo("Ошибка соединения", true);
+            }
             changeConnectionStatusTo("Устанавливаем соединение..", false);//--Триггер на изменение поля
 
            //@"Server=192.168.43.4;Port=5432;User Id=postgres;Password=vjytnf1234;Database=postgres");
+
+           //POSTGRESQL
             try
             {
                 conn = new NpgsqlConnection(getSettings());
                 conn.Open();
                 if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    changeConnectionStatusTo("Соединение установлено", false); //--Триггер на изменение поля
+                    return;
+                }
+                else
+                {
+                    //changeConnectionStatusTo("Ошибка соединения", true); //--Триггер на изменение поля
+                }
+            }
+            catch (Exception ex)
+            {
+                //smth
+                Console.WriteLine("Error Content Page -<-" + ex.Message);
+                changeConnectionStatusTo("Ошибка соединения", true);
+            }
+            //MSSQL
+            try
+            {
+                connMS = new SqlConnection(getSettingsMS());
+                connMS.Open();
+                if (connMS != null && connMS.State == ConnectionState.Open)
                     changeConnectionStatusTo("Соединение установлено", false); //--Триггер на изменение поля
                 else
                 {
@@ -116,36 +175,6 @@ namespace mobile_poverka_asset.Database
                 Console.WriteLine("Error Content Page -<-" + ex.Message);
                 changeConnectionStatusTo("Ошибка соединения", true);
             }
-
-            //NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO pribor (serial, idchannel) values (100,434)", conn);
-
-
-
-
-
-            /*int numAffected = cmd.ExecuteNonQuery();
-            if (numAffected == 0) {
-                Console.WriteLine("Data not affected");
-            }
-            else
-                Console.WriteLine("Number of rows affected: "+numAffected);*/
-
-
-
-
-            /*NpgsqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                boolfound = true;
-                string val = reader.ToString();
-                Console.WriteLine("connection established" + "\n"+ val);
-            }
-            if (boolfound == false)
-            {
-                Console.WriteLine("Data does not exist");
-            }
-            reader.Close();*/
-
         }
     }
 }
