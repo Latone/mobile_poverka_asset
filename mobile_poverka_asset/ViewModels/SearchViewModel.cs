@@ -1,14 +1,13 @@
-﻿using System;
+﻿using mobile_poverka_asset.Database;
+using mobile_poverka_asset.Models;
+using mobile_poverka_asset.Views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using mobile_poverka_asset.Database;
-using mobile_poverka_asset.Models;
-using mobile_poverka_asset.Views;
-using System.Threading.Tasks;
 
 namespace mobile_poverka_asset.ViewModels
 {
@@ -16,6 +15,8 @@ namespace mobile_poverka_asset.ViewModels
     {
         private List<string> listPicker;
         public Command<Spisok> SpisokTapped { get; }
+        public Command CreateTablesCommand { get; }
+
         //public Command<Item> ItemTapped { get; }
         public ICommand ModifyButton { get; set; }
         public ICommand DropModifyButton { get; set; }
@@ -25,7 +26,8 @@ namespace mobile_poverka_asset.ViewModels
         //public string item_id;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SearchViewModel(){
+        public SearchViewModel()
+        {
 
             listPicker = new List<string>();
             listPicker.AddRange(new List<string>
@@ -39,9 +41,13 @@ namespace mobile_poverka_asset.ViewModels
             SelectedPicker = listPicker[0];
 
             SpisokTapped = new Command<Spisok>(OnSpisokSelected);
+            CreateTablesCommand = new Command(CreateTables_Clicked);
             //ItemTapped = new Command<Item>(OnItemSelected);
         }
-        
+        async void CreateTables_Clicked()
+        {
+            return;
+        }
         async void OnSpisokSelected(Spisok spisok)
         {
             if (spisok == null)
@@ -52,25 +58,35 @@ namespace mobile_poverka_asset.ViewModels
             h.Add(spisok);
             SearchDevice.currentSpisok = h;
 
-            spisok_id=spisok.Id;
+            spisok_id = spisok.Id;
             SearchDevice.spisok_id = spisok.Id;
 
             await Shell.Current.GoToAsync($"{nameof(DB_Search_lvl2)}");
         }
-        
+
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
+
 
         public ICommand PerformSearchSpisok => new Command<string>((string query) =>
         {
-            SearchResultsSpisok = SearchDevice.GetSearchResultsSpisok(query,SelectedPicker);
+            var spisok = SearchDevice.GetSearchResultsSpisok(query, SelectedPicker);
+            if (spisok.Count == 1 && spisok[0].Comment == "no tables")
+            {
+                Tables_exist = true;
+                spisok.Clear();
+            }
+            else
+                Tables_exist = false;
+
+            searchResultsSpisok = spisok;
+
         });
-       
+
         public List<string> ListPicker
         {
             get
@@ -94,19 +110,31 @@ namespace mobile_poverka_asset.ViewModels
             {
 
                 selectedPicker = value;
-                SearchResultsSpisok = SearchDevice.GetSearchResultsSpisok("", value);
+
                 NotifyPropertyChanged();
             }
         }
-        
-        
+
+
         private Task<bool> DisplayAlert(string v1, string v2, string v3, string v4)
         {
             throw new NotImplementedException();
         }
 
-        
-       
+        private bool tables_exist;
+        public bool Tables_exist
+        {
+            get
+            {
+                return tables_exist;
+            }
+            set
+            {
+                tables_exist = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private List<Spisok> searchResultsSpisok;
         public List<Spisok> SearchResultsSpisok
         {
@@ -116,6 +144,14 @@ namespace mobile_poverka_asset.ViewModels
             }
             set
             {
+                if (value.Count == 1 && value[0].Comment == "no tables")
+                {
+                    Tables_exist = true;
+                    value.Clear();
+                }
+                else
+                    Tables_exist = false;
+
                 searchResultsSpisok = value;
                 NotifyPropertyChanged();
             }

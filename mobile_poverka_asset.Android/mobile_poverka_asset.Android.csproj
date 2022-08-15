@@ -38,7 +38,7 @@
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
-    <MandroidI18n>Mideast;West</MandroidI18n>
+    <MandroidI18n>CJK;Mideast;Rare;West;Other</MandroidI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +60,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Data.SqlClient.SNI.runtime">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="runtime.native.System.Data.SqlClient.sni">
+      <Version>4.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="runtime.win-arm64.runtime.native.System.Data.SqlClient.sni">
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="runtime.win-x64.runtime.native.System.Data.SqlClient.sni">
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="runtime.win-x86.runtime.native.System.Data.SqlClient.sni">
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Data.SqlClient">
+      <Version>4.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Encoding.CodePages">
+      <Version>6.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>

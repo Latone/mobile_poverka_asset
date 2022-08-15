@@ -114,7 +114,7 @@ namespace mobile_poverka_asset.Database
         }
         public static void Connect()
         {
-            try
+            /*try
             {
                 using (var db = new PoverkaContext())
                 {
@@ -131,7 +131,7 @@ namespace mobile_poverka_asset.Database
                 //smth
                 Console.WriteLine("Error Content Page -<-" + ex.Message);
                 changeConnectionStatusTo("Ошибка соединения", true);
-            }
+            }*/
             changeConnectionStatusTo("Устанавливаем соединение..", false);//--Триггер на изменение поля
 
            //@"Server=192.168.43.4;Port=5432;User Id=postgres;Password=vjytnf1234;Database=postgres");
@@ -148,7 +148,8 @@ namespace mobile_poverka_asset.Database
                 }
                 else
                 {
-                    //changeConnectionStatusTo("Ошибка соединения", true); //--Триггер на изменение поля
+                    conn.Close();
+                    changeConnectionStatusTo("Ошибка соединения", true); //--Триггер на изменение поля
                 }
             }
             catch (Exception ex)
@@ -172,6 +173,7 @@ namespace mobile_poverka_asset.Database
             catch (Exception ex)
             {
                 //smth
+                connMS.Close();
                 Console.WriteLine("Error Content Page -<-" + ex.Message);
                 changeConnectionStatusTo("Ошибка соединения", true);
             }

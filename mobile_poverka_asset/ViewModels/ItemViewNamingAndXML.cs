@@ -36,8 +36,9 @@ namespace mobile_poverka_asset.ViewModels
                 var listItems = await DataStore.GetAllitems();
                 try {
 
-                    if (Connection.getConn() == null ||
-                    Connection.getConn().State == ConnectionState.Closed)
+                    if (Connection.getConn() == null && Connection.getConnMS() == null &&
+                Connection.getConn().State == ConnectionState.Closed &&
+                Connection.getConnMS().State == ConnectionState.Closed)
                     {
                         DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
                         return;

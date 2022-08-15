@@ -56,6 +56,14 @@ namespace mobile_poverka_asset.Views
                 searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok(searchBar.Text, picker.SelectedItem.ToString());
             else
                 searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok(searchBar.Text, "-1");
+
+            if (((List<Spisok>)searchResultsSpisok.ItemsSource).Count == 1 && ((List<Spisok>)searchResultsSpisok.ItemsSource)[0]. == "no tables")
+            {
+                Tables_exist = true;
+                value.Clear();
+            }
+            else
+                Tables_exist = false;
         }
     }
 }

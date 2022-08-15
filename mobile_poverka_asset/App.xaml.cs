@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using mobile_poverka_asset.Database;
 
+
 namespace mobile_poverka_asset
 {
     public partial class App : Application
@@ -20,6 +21,8 @@ namespace mobile_poverka_asset
 
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IMessage, MessageAndroid>();
+            //Encoding
+            
             MainPage = new AppShell();
         }
         /*public void ConfigureServices(IServiceCollection services)

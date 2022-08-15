@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using System.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,7 +27,10 @@ namespace mobile_poverka_asset.Database
             NotifyStaticPropertyChanged("DeviceUpdate");
         }
         public static async Task Query(string pool_name) {
-            if (Connection.getConn() == null) return;
+            if (Connection.getConn() == null && Connection.getConnMS()==null &&
+                Connection.getConn().State == ConnectionState.Closed &&
+                Connection.getConnMS().State == ConnectionState.Closed) return;
+
             List<Item> list = await BaseViewModel.DataStore.ReturnAllItemsThatAreNotAddedAsync();
             if (list.Count == 0) return;
 
@@ -38,8 +42,14 @@ namespace mobile_poverka_asset.Database
 
             string sp_query = "INSERT INTO spisok(name, date, count, complete, comment) values (\'" +
                 pool_name + "\', \'" + sqlFormattedDate + "\', " + list.Count +", " +false+ ", " + "\'Добавлено с телефона\') RETURNING id;";
-            NpgsqlCommand cmd = new NpgsqlCommand(sp_query, Connection.getConn());
-            
+
+            var cmd = (dynamic)null;
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+            else if(Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(sp_query, Connection.getConnMS());
+
             int numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
             {
@@ -53,12 +63,31 @@ namespace mobile_poverka_asset.Database
 
             //Get last (currently added) spisok id
             string spisok_id_text = "select id from spisok order by id desc limit 1;";
-            cmd = new NpgsqlCommand(spisok_id_text, Connection.getConn());
-            NpgsqlDataReader reader = cmd.ExecuteReader();
+
+
+            int spisok_id = -1;
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+            {
+                cmd = new NpgsqlCommand(spisok_id_text, Connection.getConn());
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                reader.Read();
+                spisok_id = Int32.Parse(reader[0].ToString());
+                reader.Close();
+            }
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+            {
+                cmd = new SqlCommand(spisok_id_text, Connection.getConnMS());
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                reader.Read();
+                spisok_id = Int32.Parse(reader[0].ToString());
+                reader.Close();
+            }
+
             
-            reader.Read();
-            int spisok_id = Int32.Parse(reader[0].ToString());
-            reader.Close();
+            
 
             //Pribor table
             string query = "INSERT INTO pribor (serial, idchannel, spisok_id) values ";
@@ -68,7 +97,12 @@ namespace mobile_poverka_asset.Database
             query = query.Remove(query.Length - 1);
             query += ";";
 
-            cmd = new NpgsqlCommand(query, Connection.getConn());
+            
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(query, Connection.getConnMS());
+
 
             numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)

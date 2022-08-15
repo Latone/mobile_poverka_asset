@@ -38,8 +38,8 @@
                 </Picker>
                 
             </Grid>
-            
-            <SearchBar x:Name="searchBar"
+
+            <SearchBar  x:Name="searchBar"
                     Placeholder="Search items..."
                    TextTransform="Lowercase"
                    HorizontalTextAlignment="End"
@@ -48,10 +48,15 @@
                    TextChanged="OnTextChanged"
                    SearchCommand="{Binding PerformSearchSpisok}"
                    SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+
+
+
+            <Button  IsVisible="{Binding Tables_exist}" Margin="40,0,40,0" FontAttributes="Bold" FontSize="18" Text="База данных пуста Создать таблицы" Command="{Binding CreateTablesCommand}"/>
             
             <CollectionView x:Name="searchResultsSpisok"
                 ItemsSource="{Binding SearchResultsSpisok}"
                 SelectionMode="None">
+                
                 <CollectionView.ItemTemplate >
                     
                     <DataTemplate>
@@ -138,6 +143,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

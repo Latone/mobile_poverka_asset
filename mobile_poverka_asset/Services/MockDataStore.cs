@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Microsoft.Data.Sqlite;
 
 namespace mobile_poverka_asset.Services
 {

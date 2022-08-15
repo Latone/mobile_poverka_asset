@@ -4,6 +4,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -30,7 +31,14 @@ namespace mobile_poverka_asset.Database
             string sp_query = "UPDATE spisok SET " +
                                     "count = \'" + newPriborCount + "\' " +
                                     "WHERE id =" + spisok_id+ ";";
-            NpgsqlCommand cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+           
+            var cmd = (dynamic)null;
+
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(pr_query, Connection.getConnMS());
 
             //Remove pribor from table
             int numAffected = cmd.ExecuteNonQuery();
@@ -46,7 +54,11 @@ namespace mobile_poverka_asset.Database
             }
 
             //Update count in spisok
-            cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+            
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(sp_query, Connection.getConnMS());
 
             numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
@@ -76,7 +88,14 @@ namespace mobile_poverka_asset.Database
                                      "spisok_id = \'" + SearchDevice.currentItem[0].spisok_id + "\' " +
                                      "WHERE id =" + pribor_id + ";";
 
-            NpgsqlCommand cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+
+            var cmd = (dynamic)null;
+
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(pr_query, Connection.getConnMS());
 
             int numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
@@ -114,7 +133,13 @@ namespace mobile_poverka_asset.Database
                                      "complete = \'" + SearchDevice.currentSpisok[0].Complete + "\'," +
                                      "comment = \'" + SearchDevice.currentSpisok[0].Comment + "\' " +
                                      "WHERE id =" +spisok_id+";";
-            NpgsqlCommand cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+
+            var cmd = (dynamic)null;
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(sp_query, Connection.getConnMS());
 
             int numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
@@ -142,7 +167,12 @@ namespace mobile_poverka_asset.Database
             //1st: from pribor table
             string pr_query = "DELETE FROM pribor WHERE spisok_id = \'"+spisok_id+"\'";
 
-            NpgsqlCommand cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+            var cmd = (dynamic)null;
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(pr_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(pr_query, Connection.getConnMS());
 
             int numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
@@ -158,7 +188,11 @@ namespace mobile_poverka_asset.Database
 
             //2d: from spisok table
             string sp_query = "DELETE FROM spisok WHERE id = \'" + spisok_id + "\'";
-            cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+                cmd = new NpgsqlCommand(sp_query, Connection.getConn());
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+                cmd = new SqlCommand(sp_query, Connection.getConnMS());
 
             numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
