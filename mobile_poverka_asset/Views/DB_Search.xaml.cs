@@ -57,13 +57,6 @@ namespace mobile_poverka_asset.Views
             else
                 searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok(searchBar.Text, "-1");
 
-            if (((List<Spisok>)searchResultsSpisok.ItemsSource).Count == 1 && ((List<Spisok>)searchResultsSpisok.ItemsSource)[0]. == "no tables")
-            {
-                Tables_exist = true;
-                value.Clear();
-            }
-            else
-                Tables_exist = false;
         }
     }
 }

@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
+using System.Net.Sockets;
+using System.Net;
+using Xamarin.Essentials;
 
 namespace mobile_poverka_asset.XML
 {
+    
     public static class XML
     {
         private static XElement xmlMarkUp;
+        private static XDocument xdoc;
+        private static string m_fileName;
+        private static string ip;
+        private static int port;
         public static XElement getMarkup() {
             return xmlMarkUp;
         }
-        public static void CreateXML(List<Models.Item> items, Models.Spisok spisok) {
+        [STAThread]
+        public static void CreateXML(List<Models.Item> items, Models.Spisok spisok,string ipXML, int portXML) {
             xmlMarkUp = new XElement("Full");
             XElement branch1 = new XElement("Pribori");
             XElement branch2 = new XElement("Spisok",
@@ -32,7 +42,40 @@ namespace mobile_poverka_asset.XML
             xmlMarkUp.Add(branch2);
             xmlMarkUp.Add(branch1);
 
-            Console.WriteLine(xmlMarkUp);
+            xdoc = new XDocument(xmlMarkUp);
+
+            //Console.WriteLine(xmlMarkUp);
+            m_fileName = spisok.Name;
+            ip = ipXML;
+            port = portXML;
+            Thread t = new Thread(new ThreadStart(ClientThreadStart));
+            t.Start();
+        }
+        private static void ClientThreadStart()
+        {
+            Socket clientSocket = new Socket(AddressFamily.InterNetwork,
+                SocketType.Stream, ProtocolType.Tcp);
+
+
+            clientSocket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
+
+            // Send the file name.
+            clientSocket.Send(Encoding.ASCII.GetBytes(m_fileName+ ".xml\r\n"));
+
+            // Receive the length of the filename.
+            byte[] data = new byte[128];
+            clientSocket.Receive(data);
+            int length = BitConverter.ToInt32(data, 0);
+
+            clientSocket.Send(Encoding.ASCII.GetBytes(xdoc.ToString() +"\r\n"));
+
+                        clientSocket.Send(Encoding.ASCII.GetBytes("\r\n"));
+
+                        // Get the total length
+                        clientSocket.Receive(data);
+                        length = BitConverter.ToInt32(data, 0);
+            clientSocket.Close();
+
         }
     }
 }

@@ -34,6 +34,7 @@ namespace mobile_poverka_asset.ViewModels
                 displayAlert = await App.Current.MainPage.DisplayAlert("Отправить на ПК XML?", "", "Да", "Нет");
                 var numbeOfItems = await DataStore.GetNumberOfitems();
                 var listItems = await DataStore.GetAllitems();
+                var prof_name = ProfileName;
                 try {
 
                     if (Connection.getConn() == null && Connection.getConnMS() == null &&
@@ -58,7 +59,7 @@ namespace mobile_poverka_asset.ViewModels
                         Models.Spisok spisok = new Models.Spisok()
                         {
                             Id = SearchDevice.GetLastSpisoksID().ToString(),
-                            Name = ProfileName,
+                            Name = prof_name,
                             Date = DateTime.Today.ToString("dd.MM.yyyy"),
                             Count = numbeOfItems.ToString(),
                             Complete = "False",

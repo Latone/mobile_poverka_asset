@@ -70,6 +70,15 @@ namespace mobile_poverka_asset.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на 192.168.2.35.
+        /// </summary>
+        internal static string IPxml {
+            get {
+                return ResourceManager.GetString("IPxml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         internal static string LastConnDB {
@@ -102,6 +111,15 @@ namespace mobile_poverka_asset.Properties {
         internal static string port {
             get {
                 return ResourceManager.GetString("port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 468.
+        /// </summary>
+        internal static string Portxml {
+            get {
+                return ResourceManager.GetString("Portxml", resourceCulture);
             }
         }
         

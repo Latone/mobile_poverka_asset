@@ -51,7 +51,7 @@
 
 
 
-            <Button  IsVisible="{Binding Tables_exist}" Margin="40,0,40,0" FontAttributes="Bold" FontSize="18" Text="База данных пуста Создать таблицы" Command="{Binding CreateTablesCommand}"/>
+            <Button x:Name="button_tables_exist" IsVisible="{Binding Tables_exist}" Margin="40,0,40,0" FontAttributes="Bold" FontSize="18" Text="База данных пуста Создать таблицы" Command="{Binding CreateTablesCommand}"/>
             
             <CollectionView x:Name="searchResultsSpisok"
                 ItemsSource="{Binding SearchResultsSpisok}"
