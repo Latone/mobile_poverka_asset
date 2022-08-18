@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mobile_poverka_asset.Views.xmlConstructPage"
+              xmlns:local="clr-namespace:mobile_poverka_asset.ViewModels"  
+             xmlns:model="clr-namespace:mobile_poverka_asset.Models" >
+
+    <ContentPage.BindingContext>
+        <local:xmlConstructView />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <Label Text="Введите данные для отправки на устройство"
+                HorizontalOptions="CenterAndExpand" FontSize="16"/>
+
+            <Label Text="IP:"/>
+            <Entry Text="{Binding IP}" Keyboard="Default" FontSize="Medium" Margin="0" />
+
+            <Label Text="Port:"/>
+            <Entry Text="{Binding Port}" Keyboard="Default" FontSize="Medium" Margin="0" />
+
+            <Button x:DataType="local:xmlConstructView" Command="{Binding SendXML}" Text="Отправить"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

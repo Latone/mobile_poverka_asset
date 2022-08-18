@@ -19,7 +19,7 @@ namespace mobile_poverka_asset.Views
         public DB_Search_lvl2()
         {
             InitializeComponent();
-            Title = "Поиск по серийному номеру (Pribor)";
+            Title = "Список: "+ SearchDevice.currentSpisok[0].Name;
             //CurrentSpisok = SearchDevice.currentSpisok;
 
             RedVis = true;

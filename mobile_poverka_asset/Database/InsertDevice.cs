@@ -27,9 +27,8 @@ namespace mobile_poverka_asset.Database
             NotifyStaticPropertyChanged("DeviceUpdate");
         }
         public static async Task Query(string pool_name) {
-            if (Connection.getConn() == null && Connection.getConnMS()==null &&
-                Connection.getConn().State == ConnectionState.Closed &&
-                Connection.getConnMS().State == ConnectionState.Closed) return;
+            if (!((Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open) ||
+                (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open))) return;
 
             List<Item> list = await BaseViewModel.DataStore.ReturnAllItemsThatAreNotAddedAsync();
             if (list.Count == 0) return;
@@ -38,17 +37,25 @@ namespace mobile_poverka_asset.Database
 
             //Spisok table
             string sqlFormattedDate = DateTime.Today.ToString("dd.MM.yyyy");
+            int dateYEAR  = DateTime.Today.Year;
+            int dateMONTH = DateTime.Today.Month;
+            int dateDAY = DateTime.Today.Day;
             //string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd");
 
             string sp_query = "INSERT INTO spisok(name, date, count, complete, comment) values (\'" +
-                pool_name + "\', \'" + sqlFormattedDate + "\', " + list.Count +", " +false+ ", " + "\'Добавлено с телефона\') RETURNING id;";
+                pool_name + "\', \'" + sqlFormattedDate + "\', " + list.Count +", " +false+ ", " + "\'Added via phone\');";
 
             var cmd = (dynamic)null;
 
             if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
                 cmd = new NpgsqlCommand(sp_query, Connection.getConn());
-            else if(Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+            {
+                sp_query = "INSERT INTO spisok(name, date, count, complete, comment) values (\'" +
+                pool_name + "\',"+ "\'"+ dateYEAR + "-"+ dateMONTH+ "-"+ dateDAY + "\'," + list.Count + ", " + 0 + ", " + "\'Added via phone\');"; //STR_TO_DATE(\"" + sqlFormattedDate.Replace('.',' - ') + "\",\"%d-%m-%y\"), "
+
                 cmd = new SqlCommand(sp_query, Connection.getConnMS());
+            }
 
             int numAffected = cmd.ExecuteNonQuery();
             if (numAffected == -1)
@@ -78,6 +85,7 @@ namespace mobile_poverka_asset.Database
             }
             else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
             {
+                spisok_id_text = "select top(1) * from spisok order by id desc;";
                 cmd = new SqlCommand(spisok_id_text, Connection.getConnMS());
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -92,7 +100,7 @@ namespace mobile_poverka_asset.Database
             //Pribor table
             string query = "INSERT INTO pribor (serial, idchannel, spisok_id) values ";
             foreach (Item item in list) {
-                query += "(" + item.Serial + ", " + item.idchannel + ", " + spisok_id + "),";
+                query += "(\'" + item.Serial + "\', \'" + item.idchannel + "\', " + spisok_id + "),";
             }
             query = query.Remove(query.Length - 1);
             query += ";";
@@ -115,7 +123,7 @@ namespace mobile_poverka_asset.Database
                 Console.WriteLine("Number of rows affected: " + numAffected);
             }
             //foreach (Item arg in list) await BaseViewModel.DataStore.DeleteItemAsync(arg.Serial, arg.idchannel);
-
+            
         }
     }
 

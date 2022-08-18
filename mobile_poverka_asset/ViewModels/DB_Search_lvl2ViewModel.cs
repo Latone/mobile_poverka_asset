@@ -18,16 +18,33 @@ namespace mobile_poverka_asset.ViewModels
 
         public Command<Item> ItemTapped { get; }
         public Command DeletePool { get; }
-        public DB_Search_lvl2ViewModel()
+        public Command sendXML { get; }
+    public DB_Search_lvl2ViewModel()
         {
             ItemTapped = new Command<Item>(OnItemSelected);
             DeletePool = new Command(DeletePoolButton_Clicked);
+            sendXML = new Command(SENDxmlButton_Clicked);
             SearchResultsItem = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
         }
         public ICommand PerformSearchItem => new Command<string>((string query) =>
         {
             SearchResultsItem = SearchDevice.GetSearchResultsPribor(query, SearchDevice.spisok_id);
         });
+        async void SENDxmlButton_Clicked()
+        {
+            Models.Spisok spisok = new Models.Spisok()
+            {
+                Id = CurrentSpisok[0].Id,
+                Name = CurrentSpisok[0].Name,
+                Date = CurrentSpisok[0].Date.Substring(0,CurrentSpisok[0].Date.IndexOf(' ')),
+                Count = CurrentSpisok[0].Count,
+                Complete = CurrentSpisok[0].Complete,
+                Comment = CurrentSpisok[0].Comment,
+            };
+            XML.XML.Assign(SearchResultsItem, spisok);
+
+            await Shell.Current.GoToAsync(nameof(xmlConstructPage));
+        }
         async void DeletePoolButton_Clicked()
         {
             try

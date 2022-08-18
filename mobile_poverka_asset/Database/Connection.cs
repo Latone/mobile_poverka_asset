@@ -89,15 +89,27 @@ namespace mobile_poverka_asset.Database
             Preferences.Set("LastConnDB", index);
         }
         public static bool Disconnect() {
-            if (!(conn.State == ConnectionState.Open))
+            if (!(conn.State == ConnectionState.Open) && !(connMS.State == ConnectionState.Open))
                 return false;
 
 
             changeConnectionStatusTo("Разрываем соединение..", false);
             try
             {
-                conn.Close();
+                if (conn != null && conn.State == ConnectionState.Open)
+                   conn.Close();
+
+                if (connMS != null && connMS.State == ConnectionState.Open)
+                    connMS.Close();
+
                 if (conn != null && conn.State == ConnectionState.Closed)
+                    changeConnectionStatusTo("Соединение разорвано", false); //--Триггер на изменение поля
+                else
+                {
+                    changeConnectionStatusTo("Ошибка отключения", true); //--Триггер на изменение поля
+                }
+
+                if (connMS != null && connMS.State == ConnectionState.Closed)
                     changeConnectionStatusTo("Соединение разорвано", false); //--Триггер на изменение поля
                 else
                 {

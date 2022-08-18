@@ -12,9 +12,10 @@ namespace mobile_poverka_asset.ViewModels
 {
     public class ItemViewNamingAndXML : BaseViewModel
     {
-        public Command ClearName { get; }
+        public static bool returnedFromXML = false;
+        public  Command ClearName { get; }
         public Command Finish { get; }
-        public ItemViewNamingAndXML() {
+        public  ItemViewNamingAndXML() {
             string fulldate = DateTime.Today.Day.ToString("D2") + "-"+ DateTime.Today.Month.ToString("D2") + "-" + DateTime.Today.Year.ToString().Substring(2);
             int number = SearchDevice.GetNumberOfTodaysSpisok(fulldate)+1;
             fulldate += "-" + number.ToString("D2");
@@ -23,10 +24,10 @@ namespace mobile_poverka_asset.ViewModels
             ClearName = new Command(ButtonClearName);
             Finish = new Command(ButtonFinish);
         }
-        public void ButtonClearName() {
+        public  void  ButtonClearName() {
             ProfileName = "";
         }
-        public async void ButtonFinish()
+        public  async void ButtonFinish()
         {
             var displayAlert = await App.Current.MainPage.DisplayAlert("Завершить создание списка?", "Закончить процедуру?", "Да", "Нет");
             if (displayAlert)
@@ -37,9 +38,8 @@ namespace mobile_poverka_asset.ViewModels
                 var prof_name = ProfileName;
                 try {
 
-                    if (Connection.getConn() == null && Connection.getConnMS() == null &&
-                Connection.getConn().State == ConnectionState.Closed &&
-                Connection.getConnMS().State == ConnectionState.Closed)
+                    if (!((Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open) ||
+                (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)))
                     {
                         DependencyService.Get<IMessage>().LongAlert("Нет подключения\nс Базой Данных");
                         return;
@@ -51,11 +51,16 @@ namespace mobile_poverka_asset.ViewModels
 
                         ProfileName = "";
 
+                        if (!displayAlert)
+                        {
+                            DataStore.ClearAllItems();
+                            Shell.Current.GoToAsync("../..");
+                        }
                     }
 
                     if (displayAlert)
                     {//XML
-                        
+
                         Models.Spisok spisok = new Models.Spisok()
                         {
                             Id = SearchDevice.GetLastSpisoksID().ToString(),
@@ -63,12 +68,13 @@ namespace mobile_poverka_asset.ViewModels
                             Date = DateTime.Today.ToString("dd.MM.yyyy"),
                             Count = numbeOfItems.ToString(),
                             Complete = "False",
-                            Comment = "Добавлено с телефона",
+                            Comment = "Added via phone",
                         };
-                        XML.XML.CreateXML(listItems, spisok);
-                    }
-                    await DataStore.ClearAllItems();
+                        XML.XML.Assign(listItems, spisok);
 
+                        await Shell.Current.GoToAsync(nameof(xmlConstructPage));
+                        
+                    }
                 }
             catch (Exception ex)
             {
@@ -76,10 +82,11 @@ namespace mobile_poverka_asset.ViewModels
                 Console.WriteLine("Error Content Page -<-" + ex.Message);
 
             }
-            await Shell.Current.GoToAsync("../..");
+                
             }
         }
-        private string profileName;
+        
+        private  string profileName;
 
         public string ProfileName
         {

@@ -17,65 +17,89 @@ namespace mobile_poverka_asset.XML
         private static string m_fileName;
         private static string ip;
         private static int port;
+        private static List<Models.Item> items;
+        private static Models.Spisok spisok;
         public static XElement getMarkup() {
             return xmlMarkUp;
         }
+        public static void Assign(List<Models.Item> itemsX, Models.Spisok spisokX)
+        {
+            items = itemsX;
+            spisok = spisokX;
+        }
         [STAThread]
-        public static void CreateXML(List<Models.Item> items, Models.Spisok spisok,string ipXML, int portXML) {
-            xmlMarkUp = new XElement("Full");
-            XElement branch1 = new XElement("Pribori");
-            XElement branch2 = new XElement("Spisok",
-                                    new XElement("ID", spisok.Id),
-                                    new XElement("Name",spisok.Name),
-                                    new XElement("Date", spisok.Date),
-                                    new XElement("Count", spisok.Count),
-                                    new XElement("Complete", spisok.Complete),
-                                    new XElement("Comment", spisok.Comment));
+        public static void CreateXML(string ipXML, int portXML) {
+            if (items == null || spisok == null) return;
+
+            try
+            {
+                xmlMarkUp = new XElement("Full");
+                XElement branch1 = new XElement("Pribori");
+                XElement branch2 = new XElement("Spisok",
+                                        new XElement("ID", spisok.Id),
+                                        new XElement("Name", spisok.Name),
+                                        new XElement("Date", spisok.Date),
+                                        new XElement("Count", spisok.Count),
+                                        new XElement("Complete", spisok.Complete),
+                                        new XElement("Comment", spisok.Comment));
 
 
-            foreach (Models.Item item in items) {
-                branch1.Add(new XElement("Serial", item.Serial),
-                    new XElement("Channel_ID", item.idchannel));
-                            //new XElement ("Spisok_ID", spisok.Id));
+                foreach (Models.Item item in items)
+                {
+                    branch1.Add(new XElement("Serial", item.Serial),
+                        new XElement("Channel_ID", item.idchannel));
+                    //new XElement ("Spisok_ID", spisok.Id));
+                }
+
+                xmlMarkUp.Add(branch2);
+                xmlMarkUp.Add(branch1);
+
+                xdoc = new XDocument(xmlMarkUp);
+
+                //Console.WriteLine(xmlMarkUp);
+                m_fileName = spisok.Name;
+                ip = ipXML;
+                port = portXML;
+                Thread t = new Thread(new ThreadStart(ClientThreadStart));
+                t.Start();
+
+                items = null;
+                spisok = null;
             }
-
-            xmlMarkUp.Add(branch2);
-            xmlMarkUp.Add(branch1);
-
-            xdoc = new XDocument(xmlMarkUp);
-
-            //Console.WriteLine(xmlMarkUp);
-            m_fileName = spisok.Name;
-            ip = ipXML;
-            port = portXML;
-            Thread t = new Thread(new ThreadStart(ClientThreadStart));
-            t.Start();
+            catch (Exception ex) {
+                Console.WriteLine("-<-XML PAGE ERROR-<-" + ex.Message);
+            }
         }
         private static void ClientThreadStart()
         {
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                Socket clientSocket = new Socket(AddressFamily.InterNetwork,
+                    SocketType.Stream, ProtocolType.Tcp);
 
 
-            clientSocket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
+                clientSocket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
 
-            // Send the file name.
-            clientSocket.Send(Encoding.ASCII.GetBytes(m_fileName+ ".xml\r\n"));
+                // Send the file name.
+                clientSocket.Send(Encoding.ASCII.GetBytes(m_fileName + ".xml\r\n"));
 
-            // Receive the length of the filename.
-            byte[] data = new byte[128];
-            clientSocket.Receive(data);
-            int length = BitConverter.ToInt32(data, 0);
+                // Receive the length of the filename.
+                byte[] data = new byte[128];
+                clientSocket.Receive(data);
+                int length = BitConverter.ToInt32(data, 0);
 
-            clientSocket.Send(Encoding.ASCII.GetBytes(xdoc.ToString() +"\r\n"));
+                clientSocket.Send(Encoding.ASCII.GetBytes(xdoc.ToString() + "\r\n"));
 
-                        clientSocket.Send(Encoding.ASCII.GetBytes("\r\n"));
+                clientSocket.Send(Encoding.ASCII.GetBytes("\r\n"));
 
-                        // Get the total length
-                        clientSocket.Receive(data);
-                        length = BitConverter.ToInt32(data, 0);
-            clientSocket.Close();
-
+                // Get the total length
+                clientSocket.Receive(data);
+                length = BitConverter.ToInt32(data, 0);
+                clientSocket.Close();
+            }
+            catch (Exception ex) { 
+                
+            }
         }
     }
 }

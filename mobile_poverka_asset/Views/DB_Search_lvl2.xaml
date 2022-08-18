@@ -7,6 +7,10 @@
              xmlns:vm="clr-namespace:mobile_poverka_asset.ViewModels"
              xmlns:model="clr-namespace:mobile_poverka_asset.Models">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="XML" Command="{Binding sendXML}"/>
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.BindingContext>
         <vm:DB_Search_lvl2ViewModel/>
     </ContentPage.BindingContext>

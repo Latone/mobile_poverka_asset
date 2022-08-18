@@ -22,9 +22,9 @@ namespace mobile_poverka_asset.Database
         public static List<Item> currentItem;
         public static List<Spisok> GetSearchResultsSpisok(string query_pretext,string numOfRows)
         {
-            if (Connection.getConn() == null && Connection.getConnMS() == null &&
-                Connection.getConn().State == ConnectionState.Closed &&
-                Connection.getConnMS().State == ConnectionState.Closed) return new List<Spisok>();
+            if (!((Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open) ||
+                (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open))) return new List<Spisok>();
+
 
             //Check if tables exist
             string table_query_spisok = "";
@@ -68,12 +68,6 @@ namespace mobile_poverka_asset.Database
                 reader.Close();
             }
 
-            if (numofPriborTable == "0" || numofSpisokTable == "0")
-            {
-                var spisok = new List<Spisok>();
-                spisok.Add(new Spisok { Comment = "no tables" });
-                return new List<Spisok>(spisok);
-            }
 
             //
             string query="";
@@ -85,7 +79,8 @@ namespace mobile_poverka_asset.Database
            
             List<Spisok> list = new List<Spisok>();
 
-            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open
+                && numofPriborTable!="0" && numofSpisokTable!="0")
             {
                 cmd = new NpgsqlCommand(query, Connection.getConn());
                 NpgsqlDataReader reader = cmd.ExecuteReader();
@@ -108,8 +103,12 @@ namespace mobile_poverka_asset.Database
                 }
                 reader.Close();
             }
-            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open
+                && numofPriborTable != "0" && numofSpisokTable != "0")
             {
+                if (numOfRows == "-1")
+                    numOfRows = "0";
+                query = "SELECT TOP("+ numOfRows + ") * FROM spisok WHERE name LIKE \'%" + query_pretext + "%\' ORDER BY id DESC;";
                 cmd = new SqlCommand(query, Connection.getConnMS());
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -140,11 +139,63 @@ namespace mobile_poverka_asset.Database
             return list;
         }
         // select count(*) from spisok where name =
+        public static bool CheckForTables() {
+            //Check if tables exist
+            string table_query_spisok = "";
+            string table_query_pribor = "";
+
+            table_query_spisok = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = \'spisok\';";
+            table_query_pribor = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = \'pribor\';";
+
+            var cmd = (dynamic)null;
+
+            if (Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open)
+            {
+                cmd = new NpgsqlCommand(table_query_spisok, Connection.getConn());
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                reader.Read();
+                numofSpisokTable = reader.GetValue(0).ToString();
+                reader.Close();
+
+                cmd = new NpgsqlCommand(table_query_pribor, Connection.getConn());
+                reader = cmd.ExecuteReader();
+
+                reader.Read();
+                numofPriborTable = reader.GetValue(0).ToString();
+                reader.Close();
+            }
+            else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open)
+            {
+                cmd = new SqlCommand(table_query_spisok, Connection.getConnMS());
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                reader.Read();
+                numofSpisokTable = reader.GetValue(0).ToString();
+                reader.Close();
+
+                cmd = new SqlCommand(table_query_pribor, Connection.getConnMS());
+                reader = cmd.ExecuteReader();
+
+                reader.Read();
+                numofPriborTable = reader.GetValue(0).ToString();
+                reader.Close();
+            }
+            if (numofSpisokTable == "0" || numofPriborTable == "0" ||
+                numofSpisokTable == "" || numofPriborTable == "") {
+                return false;
+                numofPriborTable = "";
+                numofSpisokTable = "";
+            }
+            numofPriborTable = "";
+            numofSpisokTable = "";
+            return true;
+
+        }
         public static int GetLastSpisoksID()
         {
-            if (Connection.getConn() == null && Connection.getConnMS() == null &&
-                Connection.getConn().State == ConnectionState.Closed &&
-                Connection.getConnMS().State == ConnectionState.Closed) return -1;
+            if (!((Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open) ||
+                (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open))) return -1;
             string sp_query = "select distinct id from spisok order by id desc limit 1;";
             int endValue = -1;
 
@@ -196,9 +247,8 @@ namespace mobile_poverka_asset.Database
             return endValue;
         }
         public static int GetNumberOfTodaysSpisok(string toLookFor) {
-            if (Connection.getConn() == null && Connection.getConnMS() == null &&
-                Connection.getConn().State == ConnectionState.Closed &&
-                Connection.getConnMS().State == ConnectionState.Closed) return -1;
+            if (!((Connection.getConn() != null && Connection.getConn().State == ConnectionState.Open) ||
+                (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open))) return -1;
 
             string sp_query = "select count(*) from spisok where name like \'"+toLookFor+"%\';";
             int endValue = -1;

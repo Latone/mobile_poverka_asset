@@ -15,7 +15,6 @@ namespace mobile_poverka_asset.ViewModels
     {
         private List<string> listPicker;
         public Command<Spisok> SpisokTapped { get; }
-        public Command CreateTablesCommand { get; }
 
         //public Command<Item> ItemTapped { get; }
         public ICommand ModifyButton { get; set; }
@@ -41,13 +40,9 @@ namespace mobile_poverka_asset.ViewModels
             SelectedPicker = listPicker[0];
 
             SpisokTapped = new Command<Spisok>(OnSpisokSelected);
-            CreateTablesCommand = new Command(CreateTables_Clicked);
             //ItemTapped = new Command<Item>(OnItemSelected);
         }
-        async void CreateTables_Clicked()
-        {
-            return;
-        }
+        
         async void OnSpisokSelected(Spisok spisok)
         {
             if (spisok == null)
@@ -74,16 +69,7 @@ namespace mobile_poverka_asset.ViewModels
 
         public ICommand PerformSearchSpisok => new Command<string>((string query) =>
         {
-            var spisok = SearchDevice.GetSearchResultsSpisok(query, SelectedPicker);
-            if (spisok.Count == 1 && spisok[0].Comment == "no tables")
-            {
-                Tables_exist = true;
-                spisok.Clear();
-            }
-            else
-                Tables_exist = false;
-
-            searchResultsSpisok = spisok;
+            searchResultsSpisok = SearchDevice.GetSearchResultsSpisok(query, SelectedPicker);
 
         });
 
@@ -144,14 +130,6 @@ namespace mobile_poverka_asset.ViewModels
             }
             set
             {
-                if (value.Count == 1 && value[0].Comment == "no tables")
-                {
-                    Tables_exist = true;
-                    value.Clear();
-                }
-                else
-                    Tables_exist = false;
-
                 searchResultsSpisok = value;
                 NotifyPropertyChanged();
             }

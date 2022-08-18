@@ -105,7 +105,8 @@
                             RowDefinitions = "*" 
                         ColumnDefinitions = "*"
                 HeightRequest="250">
-                <Button x:DataType="local:ItemsViewModel" Grid.Row="1" Grid.Column ="0" Margin="0,0,0,20" FontAttributes="Bold" FontSize="30" Text="Создать" Command="{Binding AddItemCommand}" VerticalOptions="End"/>
+                <Button IsVisible="{Binding CreateSpisokVis}" x:DataType="local:ItemsViewModel" Grid.Row="1" Grid.Column ="0" Margin="0,0,0,20" FontAttributes="Bold" FontSize="30" Text="Создать" Command="{Binding AddItemCommand}" VerticalOptions="End"/>
+                <Button IsVisible="{Binding CreateTablesVis}" x:DataType="local:ItemsViewModel" Grid.Row="1" Grid.Column ="0" Margin="0,0,0,20" FontAttributes="Bold" FontSize="30" Text="Создать Таблицы: spisok,poverka" Command="{Binding CreateTablesCommand}" VerticalOptions="End"/>
 
 
             </Grid>
