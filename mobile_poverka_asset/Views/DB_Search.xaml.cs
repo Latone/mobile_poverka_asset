@@ -20,7 +20,7 @@ namespace mobile_poverka_asset.Views
         {
             InitializeComponent();
             Title = "Поиск по имени пула (Spisok)";
-            searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok("",picker.SelectedItem.ToString());
+            //searchResultsSpisok.ItemsSource = SearchDevice.GetSearchResultsSpisok("",picker.SelectedItem.ToString());
             //BindingContext = this;
         }
         protected override void OnAppearing()

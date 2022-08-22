@@ -106,9 +106,12 @@ namespace mobile_poverka_asset.Database
             else if (Connection.getConnMS() != null && Connection.getConnMS().State == ConnectionState.Open
                 && numofPriborTable != "0" && numofSpisokTable != "0")
             {
-                if (numOfRows == "-1")
-                    numOfRows = "0";
-                query = "SELECT TOP("+ numOfRows + ") * FROM spisok WHERE name LIKE \'%" + query_pretext + "%\' ORDER BY id DESC;";
+                if (numOfRows == "-1" && query_pretext != "") //Get all results without limit when searching
+                    query = "SELECT * FROM spisok WHERE name LIKE \'%" + query_pretext + "%\' ORDER BY id DESC;";
+                else //Limit results (even at the end of the serach (empty string))
+                    query = "SELECT TOP("+numOfRows+") * FROM spisok WHERE name LIKE \'%" + query_pretext + "%\' ORDER BY id DESC;";
+
+
                 cmd = new SqlCommand(query, Connection.getConnMS());
                 SqlDataReader reader = cmd.ExecuteReader();
 

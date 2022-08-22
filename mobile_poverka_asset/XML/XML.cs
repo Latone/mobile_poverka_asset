@@ -6,6 +6,8 @@ using System.Xml.Linq;
 using System.Net.Sockets;
 using System.Net;
 using Xamarin.Essentials;
+using Xamarin.Forms;
+using mobile_poverka_asset.Services;
 
 namespace mobile_poverka_asset.XML
 {
@@ -34,8 +36,8 @@ namespace mobile_poverka_asset.XML
             try
             {
                 xmlMarkUp = new XElement("Full");
-                XElement branch1 = new XElement("Pribori");
-                XElement branch2 = new XElement("Spisok",
+                XElement branch1 = new XElement("Devices");
+                XElement branch2 = new XElement("List",
                                         new XElement("ID", spisok.Id),
                                         new XElement("Name", spisok.Name),
                                         new XElement("Date", spisok.Date),
@@ -46,8 +48,9 @@ namespace mobile_poverka_asset.XML
 
                 foreach (Models.Item item in items)
                 {
-                    branch1.Add(new XElement("Serial", item.Serial),
-                        new XElement("Channel_ID", item.idchannel));
+                    branch1.Add(new XElement("Device",
+                                    new XElement("Serial", item.Serial),
+                                    new XElement("Channel_ID", item.idchannel)));
                     //new XElement ("Spisok_ID", spisok.Id));
                 }
 
@@ -62,6 +65,7 @@ namespace mobile_poverka_asset.XML
                 port = portXML;
                 Thread t = new Thread(new ThreadStart(ClientThreadStart));
                 t.Start();
+                t.Join();
 
                 items = null;
                 spisok = null;
@@ -79,9 +83,9 @@ namespace mobile_poverka_asset.XML
 
 
                 clientSocket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
-
-                // Send the file name.
-                clientSocket.Send(Encoding.ASCII.GetBytes(m_fileName + ".xml\r\n"));
+            
+            // Send the file name.
+            clientSocket.Send(Encoding.ASCII.GetBytes(m_fileName + ".xml\r\n"));
 
                 // Receive the length of the filename.
                 byte[] data = new byte[128];
@@ -97,9 +101,11 @@ namespace mobile_poverka_asset.XML
                 length = BitConverter.ToInt32(data, 0);
                 clientSocket.Close();
             }
-            catch (Exception ex) { 
-                
+            catch (Exception ex)
+            {
+                //DependencyService.Get<IMessage>().ShortAlert("Ошибка при отправке.\nПроверьте IP и Port");
+                return;
             }
-        }
+}
     }
 }

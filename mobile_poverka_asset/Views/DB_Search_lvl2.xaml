@@ -102,7 +102,7 @@
                 </Grid>
             <SearchBar x:Name="searchBar"
                        x:DataType="vm:DB_Search_lvl2ViewModel"
-                    Placeholder="Search items..."
+                    Placeholder="Поиск по ID..."
                    TextTransform="Lowercase"
                    HorizontalTextAlignment="Center"
                    FontSize="Medium"

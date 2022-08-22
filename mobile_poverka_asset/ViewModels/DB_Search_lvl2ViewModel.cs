@@ -30,8 +30,9 @@ namespace mobile_poverka_asset.ViewModels
         {
             SearchResultsItem = SearchDevice.GetSearchResultsPribor(query, SearchDevice.spisok_id);
         });
-        async void SENDxmlButton_Clicked()
+            async void SENDxmlButton_Clicked()
         {
+            SearchResultsItem = SearchDevice.GetSearchResultsPribor("", SearchDevice.spisok_id);
             Models.Spisok spisok = new Models.Spisok()
             {
                 Id = CurrentSpisok[0].Id,
@@ -110,11 +111,6 @@ namespace mobile_poverka_asset.ViewModels
         {
             SearchBar searchBar = (SearchBar)sender;
             SearchResultsItem = SearchDevice.GetSearchResultsPribor(searchBar.Text, SearchDevice.spisok_id);
-        }
-        public void OnAppearing()
-        {
-            IsBusy = true;
-            SelectedItem = null;
         }
         /*async void OnItemSelected(Item item)
         {
