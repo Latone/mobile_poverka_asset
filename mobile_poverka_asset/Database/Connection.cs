@@ -168,7 +168,7 @@ namespace mobile_poverka_asset.Database
             {
                 //smth
                 Console.WriteLine("Error Content Page -<-" + ex.Message);
-                changeConnectionStatusTo("Ошибка соединения", true);
+                //changeConnectionStatusTo("Ошибка соединения", true); --Uncomment this if everything gone wild
             }
             //MSSQL
             try

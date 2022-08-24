@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 using mobile_poverka_asset.Services;
 using System.Net.Sockets;
 using System.Net;
+using System.Net.NetworkInformation;
 
 namespace mobile_poverka_asset.ViewModels
 {
@@ -17,21 +18,14 @@ namespace mobile_poverka_asset.ViewModels
             IP = Preferences.Get("XMLIP", "192.168.1.1");
             Port = Preferences.Get("XMLPORT", "30001");
         }
+       
         public void sendXML_Clicked() {
-            try
-            {
-                Socket clientSocket = new Socket(AddressFamily.InterNetwork,
-                       SocketType.Stream, ProtocolType.Tcp);
 
-
-                clientSocket.Connect(new IPEndPoint(IPAddress.Parse(IP), Int32.Parse(Port)));
-                clientSocket.Close();
-
-                XML.XML.CreateXML(IP, Int32.Parse(Port));
+            try {
+                if (!XML.XML.CreateXML(IP, Int32.Parse(Port)))
+                    return;
             }
             catch (Exception ex) {
-                DependencyService.Get<IMessage>().ShortAlert("Ошибка при отправке.\nПроверьте IP и Port");
-                return;
             }
             DependencyService.Get<IMessage>().ShortAlert("XML-документ отправлен на адрес:\n"+IP+":"+Port);
 

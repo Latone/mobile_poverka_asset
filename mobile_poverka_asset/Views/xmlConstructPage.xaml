@@ -18,7 +18,7 @@
             <Entry Text="{Binding IP}" Keyboard="Default" FontSize="Medium" Margin="0" />
 
             <Label Text="Port:"/>
-            <Entry Text="{Binding Port}" Keyboard="Default" FontSize="Medium" Margin="0" />
+            <Entry Text="{Binding Port}" Keyboard="Numeric" FontSize="Medium" Margin="0" />
 
             <Button x:DataType="local:xmlConstructView" Command="{Binding SendXML}" Text="Отправить"/>
         </StackLayout>

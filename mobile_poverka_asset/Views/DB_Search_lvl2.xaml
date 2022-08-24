@@ -102,6 +102,10 @@
                 </Grid>
             <SearchBar x:Name="searchBar"
                        x:DataType="vm:DB_Search_lvl2ViewModel"
+                       TextColor="Black"
+                        PlaceholderColor="#666"
+                        BackgroundColor="#ccc"
+                        CancelButtonColor="Black"
                     Placeholder="Поиск по ID..."
                    TextTransform="Lowercase"
                    HorizontalTextAlignment="Center"
